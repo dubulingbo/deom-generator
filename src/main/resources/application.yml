@@ -1,0 +1,23 @@
+server:
+  port: 9000
+
+
+spring:
+  application:
+    name: cloud-demo-generator-service
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+# 日志的配置文件位置
+logging:
+  config: classpath:logback/logback-dev.xml
+
+# 配置雪花算法工作机id和机器id
+dublbo:
+  dbi:
+    id-strategy:
+      snowflake:
+        machineId: 3
+        serverId: 3
+
