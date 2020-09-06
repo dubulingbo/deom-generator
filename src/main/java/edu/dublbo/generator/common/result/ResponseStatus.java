@@ -1,6 +1,7 @@
 package edu.dublbo.generator.common.result;
 
 /**
+ * 通讯状态枚举类
  * @author DubLBo
  * @since 2020-09-05 20:51
  * i believe i can i do
