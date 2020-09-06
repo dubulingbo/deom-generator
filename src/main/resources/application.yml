@@ -8,16 +8,45 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
+    url: jdbc:mysql://10.255.60.194:3306/demo_generator_db?serverTimezone=Asia/Shanghai
+    username: dbtester
+    password: 123456789
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+
+# Mybatis 相关配置
+mybatis:
+  type-aliases-package: edu.dublbo.generator
+  config-location: classpath:mybatis.xml
+  mapper-locations:
+    - classpath:mapper/mysql/*Mapper.xml
 
 # 日志的配置文件位置
 logging:
   config: classpath:logback/logback-dev.xml
 
-# 配置雪花算法工作机id和机器id
 dublbo:
   dbi:
     id-strategy:
       snowflake:
+        # 配置雪花算法工作机id和机器id
         machineId: 3
         serverId: 3
 
+  web:
+    response:
+      # 是否开启 response 的 debug
+      debug: true
