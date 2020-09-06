@@ -3,13 +3,14 @@ package edu.dublbo.generator.common.result;
 import java.io.Serializable;
 
 /**
+ * 操作状态信息类
  * @author DubLBo
  * @since 2020-09-05 20:34
  * i believe i can i do
  */
 public class BaseResponseData implements Serializable {
-    private String optCode;  // 业务代码
-    private String message;       // 操作信息
+    private String optCode = OptStatus.SUCCESS.getOptCode();  // 操作状态代码
+    private String message = OptStatus.SUCCESS.getMessage();  // 操作状态信息
 
 
     public String getOptCode() {

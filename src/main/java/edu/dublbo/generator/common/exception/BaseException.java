@@ -12,6 +12,7 @@ public class BaseException extends RuntimeException {
     public BaseException(){}
 
     public BaseException(String optCode, String optMsg){
+        super();
         this.optCode = optCode;
         this.optMsg = optMsg;
     }
