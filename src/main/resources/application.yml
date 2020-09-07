@@ -12,7 +12,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     platform: mysql
-    url: jdbc:mysql://10.255.60.194:3306/demo_generator_db?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://10.255.60.194:3306/demo_generator_db?serverTimezone=UTC
     username: dbtester
     password: 123456789
     druid:
