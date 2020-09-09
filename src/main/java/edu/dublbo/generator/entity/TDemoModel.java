@@ -16,7 +16,7 @@ public class TDemoModel extends BaseResponseData implements Serializable {
     // 主键
     private String id;
 
-    // 模型名称
+    // 模型名称（带包名）
     @NotEmpty
     private String name;
     // 说明
@@ -30,6 +30,13 @@ public class TDemoModel extends BaseResponseData implements Serializable {
     private String modifyUser;
     private Date modifyTime;
     private Integer deleteFlag;
+
+    // 模型名（不带包路径）
+    private String modelName;
+    // 父级包路径
+    private String packageDir;
+    // 二级包路径（用于计算其他层路径；Service，Rest，Mapper等）
+    private String packageDir2;
 
     public String getTableName() {
         return tableName;
@@ -111,6 +118,30 @@ public class TDemoModel extends BaseResponseData implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public String getPackageDir() {
+        return packageDir;
+    }
+
+    public void setPackageDir(String packageDir) {
+        this.packageDir = packageDir;
+    }
+
+    public String getPackageDir2() {
+        return packageDir2;
+    }
+
+    public void setPackageDir2(String packageDir2) {
+        this.packageDir2 = packageDir2;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,6 +171,9 @@ public class TDemoModel extends BaseResponseData implements Serializable {
                 ", modifyUser='" + modifyUser + '\'' +
                 ", modifyTime=" + modifyTime +
                 ", deleteFlag=" + deleteFlag +
+                ", modelName='" + modelName + '\'' +
+                ", packageDir='" + packageDir + '\'' +
+                ", packageDir2='" + packageDir2 + '\'' +
                 '}';
     }
 }

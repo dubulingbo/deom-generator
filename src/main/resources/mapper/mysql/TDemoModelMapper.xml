@@ -10,6 +10,9 @@
         <result column="remark" property="remark"/>
         <result column="table_name" property="tableName"/>
         <result column="sort_no" property="sortNo"/>
+        <result column="model_name" property="modelName"/>
+        <result column="package_dir" property="packageDir"/>
+        <result column="package_dir2" property="packageDir2"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_user" property="modifyUser"/>
@@ -22,7 +25,7 @@
 
     <!-- 定义全部列名 -->
     <sql id="columnName">
-        id,name,remark,table_name,sort_no,create_user,create_time,modify_user,modify_time,delete_flag
+        id,name,remark,table_name,sort_no,model_name,package_dir,package_dir2,create_user,create_time,modify_user,modify_time,delete_flag
     </sql>
 
 
@@ -31,7 +34,7 @@
             <include refid="columnName"/>
         )
         values (
-            #{id},#{name},#{remark},#{tableName},#{sortNo},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
+            #{id},#{name},#{remark},#{tableName},#{sortNo},#{modelName},#{packageDir},#{packageDir2},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
         )
     </insert>
 
@@ -47,6 +50,9 @@
             remark = #{remark},
             table_name = #{tableName},
             sort_no = #{sortNo},
+            model_name = #{modelName},
+            package_dir = #{packageDir},
+            package_dir2 = #{packageDir2},
             create_user = #{createUser},
             create_time = #{createTime},
             modify_user = #{modifyUser},

@@ -76,9 +76,8 @@ public class DemoModelController {
         }
 
         WebObjectUtils.assignObjectField(request, entity, "name", "remark", "tableName", "sortNo");
-        entity.setModifyUser(Constant.CURRENT_USER);
-        entity.setModifyTime(new Date());
-        service.update(entity);
+
+        service.edit(entity);
         return ResponseResult.generateSuccessResult(entity);
     }
 
