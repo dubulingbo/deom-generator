@@ -13,8 +13,5 @@ public interface TDemoModelMapper {
     void add(TDemoModel entity);
     void update(TDemoModel entity);
     TDemoModel get(String id);
-
     List<TDemoModel> listAll();
-
-    Integer addDefaultModelDetail();
 }

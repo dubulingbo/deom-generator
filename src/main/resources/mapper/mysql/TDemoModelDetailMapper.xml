@@ -8,12 +8,11 @@
         <result column="id" property="id"/>
         <result column="model_id" property="modelId"/>
         <result column="property_name" property="propertyName"/>
-        <result column="property_type" property="propertyType"/>
-        <result column="property_desc" property="propertyDesc"/>
+        <result column="property_type_id" property="propertyTypeId"/>
+        <result column="remark" property="remark"/>
         <result column="column_name" property="columnName"/>
-        <result column="column_type" property="columnType"/>
-        <result column="column_type_length" property="columnTypeLength"/>
-        <result column="column_desc" property="columnDesc"/>
+        <result column="column_type_id" property="columnTypeId"/>
+        <result column="column_length" property="columnLength"/>
         <result column="sort_no" property="sortNo"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
@@ -27,7 +26,93 @@
 
     <!-- 定义全部列名 -->
     <sql id="columnName">
-        id,model_id,property_name,property_type,property_desc,column_name,column_type,column_type_length,column_desc,sort_no,create_user,create_time,modify_user,modify_time,delete_flag
+        id,model_id,property_name,property_type_id,remark,column_name,column_type_id,column_length,sort_no,create_user,create_time,modify_user,modify_time,delete_flag
+    </sql>
+
+    <!-- 不带别名的判断条件语句 -->
+    <sql id="condition">
+        <if test="modelId != null and modelId != ''">
+            and model_id = #{modelId}
+        </if>
+        <if test="propertyName != null and propertyName != ''">
+            and property_name = #{propertyName}
+        </if>
+        <if test="propertyTypeId != null and propertyTypeId != ''">
+            and property_type_id = #{propertyTypeId}
+        </if>
+        <if test="remark != null and remark != ''">
+            and remark = #{remark}
+        </if>
+        <if test="columnName != null and columnName != ''">
+            and column_name = #{columnName}
+        </if>
+        <if test="columnTypeId != null and columnTypeId != ''">
+            and column_type_id = #{columnTypeId}
+        </if>
+        <if test="columnLength != null and columnLength != ''">
+            and column_length = #{columnLength}
+        </if>
+        <if test="sortNo != null and sortNo != ''">
+            and sort_no = #{sortNo}
+        </if>
+        <if test="createUser != null and createUser != ''">
+            and create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+
+    <!-- 带别名 a 的判断条件语句 -->
+    <sql id="condition_a">
+        <if test="modelId != null and modelId != ''">
+            and a.model_id = #{modelId}
+        </if>
+        <if test="propertyName != null and propertyName != ''">
+            and a.property_name = #{propertyName}
+        </if>
+        <if test="propertyTypeId != null and propertyTypeId != ''">
+            and a.property_type_id = #{propertyTypeId}
+        </if>
+        <if test="remark != null and remark != ''">
+            and a.remark = #{remark}
+        </if>
+        <if test="columnName != null and columnName != ''">
+            and a.column_name = #{columnName}
+        </if>
+        <if test="columnTypeId != null and columnTypeId != ''">
+            and a.column_type_id = #{columnTypeId}
+        </if>
+        <if test="columnLength != null and columnLength != ''">
+            and a.column_length = #{columnLength}
+        </if>
+        <if test="sortNo != null and sortNo != ''">
+            and a.sort_no = #{sortNo}
+        </if>
+        <if test="createUser != null and createUser != ''">
+            and a.create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and a.create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and a.modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and a.modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag = #{deleteFlag}
+        </if>
     </sql>
 
     <insert id="add" parameterType="edu.dublbo.generator.entity.TDemoModelDetail">
@@ -35,17 +120,10 @@
             <include refid="columnName"/>
         )
         values (
-            #{id},#{modelId},#{propertyName},#{propertyType},#{propertyDesc},#{columnName},#{columnType},#{columnTypeLength},#{columnDesc},#{sortNo},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
-        )
-    </insert>
-
-
-    <insert id="add01" parameterType="edu.dublbo.generator.entity.DefaultModelDetail">
-        insert into <include refid="tableName"/> (
-            <include refid="columnName"/>
-        )
-        values (
-            #{id},#{modelId},#{propertyName},#{propertyType},#{propertyDesc},#{columnName},#{columnType},#{columnTypeLength},#{columnDesc},#{sortNo},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
+            #{id},#{modelId},#{propertyName},#{propertyTypeId},
+            #{remark},#{columnName},#{columnTypeId},#{columnLength},
+            #{sortNo},#{createUser},#{createTime},#{modifyUser},
+            #{modifyTime},#{deleteFlag}
         )
     </insert>
 
@@ -57,15 +135,13 @@
         update <include refid="tableName"/>
         set
         <trim suffixOverrides=",">
-            name = #{name},
-            model_id = #{remark},
+            model_id = #{modelId},
             property_name = #{propertyName},
-            property_type = #{propertyType},
-            property_desc = #{propertyDesc},
+            property_type_id = #{propertyTypeId},
+            remark = #{remark},
             column_name = #{columnName},
-            column_type = #{columnType},
-            column_type_length = #{columnTypeLength},
-            column_desc = #{columnDesc},
+            column_type_id = #{columnTypeId},
+            column_length = #{columnLength},
             sort_no = #{sortNo},
             create_user = #{createUser},
             create_time = #{createTime},
@@ -98,6 +174,39 @@
         where delete_flag = 0
     </select>
 
+    <select id="select" parameterType="Map" resultType="edu.dublbo.generator.entity.TDemoModelDetail">
+        select
+            a.id as "id",
+            a.model_id as "modelId",
+            a.property_name as "propertyName",
+            a.property_type_id as "propertyTypeId",
+            a.remark as "remark",
+            a.column_name as "columnName",
+            a.column_type_id as "columnTypeId",
+            a.column_length as "columnLength",
+            a.sort_no as "sortNo",
+            a.create_user as "createUser",
+            a.create_time as "createTime",
+            a.modify_user as "modifyUser",
+            a.modify_time as "modifyTime",
+            a.delete_flag as "deleteFlag",
+            b1.name as "proType",
+            b1.qualified_name as "qualifiedProType",
+            b2.name as "colType",
+            b2.default_len as "defaultColLen"
+        from <include refid="tableName"/> a
+        inner join t_demo_property_type b1 on a.property_type_id = b1.id
+        inner join t_demo_column_type b2 on a.column_type_id = b2.id
+        where a.delete_flag = 0
+            <include refid="condition_a"/>
+        <if test="_order != null and _order != ''">
+            order by #{_order}
+            <if test="_sort != null and _sort != ''">
+                #{_sort}
+            </if>
+        </if>
+    </select>
+
     <insert id="batchAdd" parameterType="java.util.List">
         insert into <include refid="tableName"/> (
             <include refid="columnName"/>
@@ -108,12 +217,11 @@
                     #{model.id},
                     #{model.modelId},
                     #{model.propertyName},
-                    #{model.propertyType},
-                    #{model.propertyDesc},
+                    #{model.propertyTypeId},
+                    #{model.remark},
                     #{model.columnName},
-                    #{model.columnType},
-                    #{model.columnTypeLength},
-                    #{model.columnDesc},
+                    #{model.columnTypeId},
+                    #{model.columnLength},
                     #{model.sortNo},
                     #{model.createUser},
                     #{model.createTime},
@@ -123,6 +231,26 @@
                 )
             </if>
         </foreach>
+    </insert>
+
+    <insert id="addProType" parameterType="edu.dublbo.generator.entity.TDemoPropertyType">
+        insert into t_demo_property_type(
+            id,name,qualified_name,sort_no,remark,create_user,create_time,modify_user,modify_time,delete_flag
+        ) values (
+            #{id},#{name},#{qualifiedName},#{sortNo},
+            #{remark},#{createUser},#{createTime},#{modifyUser},
+            #{modifyTime},#{deleteFlag}
+        )
+    </insert>
+
+    <insert id="addColType" parameterType="edu.dublbo.generator.entity.TDemoColumnType">
+        insert into t_demo_column_type(
+            id,name,default_len,sort_no,remark,create_user,create_time,modify_user,modify_time,delete_flag
+        ) values (
+            #{id},#{name},#{defaultLen},#{sortNo},
+            #{remark},#{createUser},#{createTime},#{modifyUser},
+            #{modifyTime},#{deleteFlag}
+        )
     </insert>
 
 </mapper>

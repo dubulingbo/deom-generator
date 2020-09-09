@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class FileOperator {
     /**
-     * 读取文件每一行的内容，存入List中，空行不存储
-     * @param filePath 文件路径
+     * 读取文件每一行的内容，存入List中
+     * @param file 文件
      * @return 文件所有内容
      * @throws IOException 文件读取错误
      */
-    public List<String> readContent(String filePath) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8));
+    public static List<String> readContent(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         List<String> content = new ArrayList<>();
         String rowStr;
 
@@ -30,7 +30,7 @@ public class FileOperator {
         }
         return content;
     }
-    public void writeContent(List<String> content, String filename) throws Exception {
+    public static void writeContent(List<String> content, String filename) throws Exception {
         if(content == null || content.size() == 0){
             throw new Exception("内容为空");
         }

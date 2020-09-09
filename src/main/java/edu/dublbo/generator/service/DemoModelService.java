@@ -38,7 +38,6 @@ public class DemoModelService {
 
     /**
      * 增加模型
-     *
      * @param entity 模型
      * @return 模型的详细信息
      */
@@ -99,24 +98,19 @@ public class DemoModelService {
             en.setDeleteFlag(0);
         }
 
-
         modelDetailMapper.batchAdd(detailList);
-
-
-//        entity.setOptCode(OptStatus.SUCCESS.getOptCode());
-//        entity.setMessage(OptStatus.SUCCESS.getMessage());
         return entity;
     }
 
     //更新
+    @Transactional
     public void update(TDemoModel entity) {
-//        if(entity)
+        mapper.update(entity);
     }
 
+    @Transactional
     public TDemoModel get(String id) {
-
         return mapper.get(id);
-
     }
 
     @Transactional
@@ -143,7 +137,9 @@ public class DemoModelService {
         mapper.update(entity);
     }
 
+    @Transactional
     public List<TDemoModel> listAll() {
         return mapper.listAll();
     }
+
 }

@@ -1,7 +1,9 @@
 package edu.dublbo.generator.mapper;
 
 import edu.dublbo.generator.entity.DefaultModelDetail;
+import edu.dublbo.generator.entity.TDemoColumnType;
 import edu.dublbo.generator.entity.TDemoModelDetail;
+import edu.dublbo.generator.entity.TDemoPropertyType;
 
 import java.util.List;
 import java.util.Map;
@@ -15,11 +17,10 @@ public interface TDemoModelDetailMapper {
     void add(TDemoModelDetail entity);
     void update(TDemoModelDetail entity);
     TDemoModelDetail get(String id);
-    List<TDemoModelDetail> listAll();
-
     void batchAdd(List<DefaultModelDetail> detailList);
-
-    void add01(DefaultModelDetail entity);
-
     void batchUpdateDelete(Map<String, Object> condition);
+    List<TDemoModelDetail> select(Map<String, Object> condition);
+
+    void addProType(TDemoPropertyType entity);
+    void addColType(TDemoColumnType entity);
 }

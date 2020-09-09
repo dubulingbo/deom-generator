@@ -1,5 +1,6 @@
 package edu.dublbo.generator.entity;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -11,21 +12,50 @@ import java.util.Objects;
  */
 public class TDemoModelDetail implements Serializable {
     private static final long serialVersionUID = 238650092367164538L;
+    // 主键
     private String id;
+    // 所属模型ID
+    @NotNull
     private String modelId;
+    // 属性名称
+    @NotNull
     private String propertyName;
-    private String propertyType;
-    private String propertyDesc;
+    // 属性类型ID
+    @NotNull
+    private String propertyTypeId;
+    // 备注，注释
+    @NotNull
+    private String remark;
+    // 字段名，根据属性名自动生成
+    @NotNull
     private String columnName;
-    private String columnType;
-    private Integer columnTypeLength;
-    private String columnDesc;
+    // 字段类型ID
+    @NotNull
+    private String columnTypeId;
+    // 字段长度
+    private Integer columnLength;
+    // 排序，默认为900
     private Integer sortNo;
+    // 创建人
     private String createUser;
+    // 创建时间
     private Date createTime;
+    // 最后修改人
     private String modifyUser;
+    // 最后修改时间
     private Date modifyTime;
+    // 是否删除（1：是，0：否）
     private Integer deleteFlag;
+
+    // 属性类型名
+    private String proType;
+    // 属性全限定类型名（带包路径）
+    private String qualifiedProType;
+
+    // 字段类型名
+    private String colType;
+    // 字段默认长度
+    private Integer defaultColLen;
 
     public String getId() {
         return id;
@@ -51,20 +81,20 @@ public class TDemoModelDetail implements Serializable {
         this.propertyName = propertyName;
     }
 
-    public String getPropertyType() {
-        return propertyType;
+    public String getPropertyTypeId() {
+        return propertyTypeId;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public void setPropertyTypeId(String propertyTypeId) {
+        this.propertyTypeId = propertyTypeId;
     }
 
-    public String getPropertyDesc() {
-        return propertyDesc;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setPropertyDesc(String propertyDesc) {
-        this.propertyDesc = propertyDesc;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getColumnName() {
@@ -75,28 +105,20 @@ public class TDemoModelDetail implements Serializable {
         this.columnName = columnName;
     }
 
-    public String getColumnType() {
-        return columnType;
+    public String getColumnTypeId() {
+        return columnTypeId;
     }
 
-    public void setColumnType(String columnType) {
-        this.columnType = columnType;
+    public void setColumnTypeId(String columnTypeId) {
+        this.columnTypeId = columnTypeId;
     }
 
-    public Integer getColumnTypeLength() {
-        return columnTypeLength;
+    public Integer getColumnLength() {
+        return columnLength;
     }
 
-    public void setColumnTypeLength(Integer columnTypeLength) {
-        this.columnTypeLength = columnTypeLength;
-    }
-
-    public String getColumnDesc() {
-        return columnDesc;
-    }
-
-    public void setColumnDesc(String columnDesc) {
-        this.columnDesc = columnDesc;
+    public void setColumnLength(Integer columnLength) {
+        this.columnLength = columnLength;
     }
 
     public Integer getSortNo() {
@@ -147,6 +169,38 @@ public class TDemoModelDetail implements Serializable {
         this.deleteFlag = deleteFlag;
     }
 
+    public String getProType() {
+        return proType;
+    }
+
+    public void setProType(String proType) {
+        this.proType = proType;
+    }
+
+    public String getQualifiedProType() {
+        return qualifiedProType;
+    }
+
+    public void setQualifiedProType(String qualifiedProType) {
+        this.qualifiedProType = qualifiedProType;
+    }
+
+    public String getColType() {
+        return colType;
+    }
+
+    public void setColType(String colType) {
+        this.colType = colType;
+    }
+
+    public Integer getDefaultColLen() {
+        return defaultColLen;
+    }
+
+    public void setDefaultColLen(Integer defaultColLen) {
+        this.defaultColLen = defaultColLen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -169,12 +223,10 @@ public class TDemoModelDetail implements Serializable {
                 "id='" + id + '\'' +
                 ", modelId='" + modelId + '\'' +
                 ", propertyName='" + propertyName + '\'' +
-                ", propertyType='" + propertyType + '\'' +
-                ", propertyDesc='" + propertyDesc + '\'' +
+                ", propertyTypeId='" + propertyTypeId + '\'' +
+                ", remark='" + remark + '\'' +
                 ", columnName='" + columnName + '\'' +
-                ", columnType='" + columnType + '\'' +
-                ", columnTypeLength=" + columnTypeLength +
-                ", columnDesc='" + columnDesc + '\'' +
+                ", columnTypeId='" + columnTypeId + '\'' +
                 ", sortNo=" + sortNo +
                 ", createUser='" + createUser + '\'' +
                 ", createTime=" + createTime +

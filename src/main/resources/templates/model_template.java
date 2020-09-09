@@ -1,20 +1,22 @@
-package #{packageDir}
+package #{packageDir};
 
-import ...
+import java.io.Serializable;
+#{importZone}
 
 /**
- * #{memo}
+ * #{remark}
  * @author #{user}
  * @since #{curTime}
  * i believe i can i do
  */
 
 public class #{className} implements Serializable{
-    private static final long serialVersionUID = #{serialNumber}L;
+    //private static final long serialVersionUID = #{serialNumber}L;
 
-    // #{propertyMemo}
-    private #{propertyType} #{propertyName};
+#{propertyZone}
 
-    #{getAndSetMethod}
+#{getAndSetMethod}
+
+#{toStringMethod}
 
 }

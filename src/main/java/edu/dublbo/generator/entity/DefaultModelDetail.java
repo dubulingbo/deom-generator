@@ -9,26 +9,20 @@ import java.util.Date;
  */
 public enum DefaultModelDetail {
     // id，createUser，createTime，modifyUser，modifyTime，deleteFlag
-    DEFAULT_01("","","id","java.lang.String","主键ID","id","VARCHAR",32,"主键ID",1,"",null,"",null,0),
-
-    DEFAULT_02("","","createUser","java.lang.String","创建人","create_user","VARCHAR",64,"创建人",996,"",null,"",null,0),
-
-    DEFAULT_03("","","createTime","java.util.Date","创建时间","create_time","DATETIME",null,"创建时间",997,"",null,"",null,0),
-
-    DEFAULT_04("","","modifyUser","java.lang.String","最后更新人","modify_user","VARCHAR",64,"最后更新人",998,"",null,"",null,0),
-
-    DEFAULT_05("","","modifyTime","java.util.Date","最后更新时间","modify_time","DATETIME",null,"最后更新时间",999,"",null,"",null,0),
-
-    DEFAULT_06("","","deleteFlag","java.lang.Integer","是否删除（1：是，0：否）","delete_flag","SMALLINT",4,"是否删除（1：是，0：否）",1000,"",null,"",null,0);
+    DEFAULT_01("id","753323286297194496","主键ID","id","753323286297194502",32,1),
+    DEFAULT_02("createUser","753323286297194496","创建人","create_user","753323286297194502",64,996),
+    DEFAULT_03("createTime","753323286297194498","创建时间","create_time","753323286297194512",null,997),
+    DEFAULT_04("modifyUser","753323286297194496","最后更新人","modify_user","753323286297194502",64,998),
+    DEFAULT_05("modifyTime","753323286297194498","最后更新时间","modify_time","753323286297194512",null,999),
+    DEFAULT_06("deleteFlag","753323286297194497","是否删除（1：是，0：否）","delete_flag","753323286297194507",4,1000);
     private String id;
     private String modelId;
     private String propertyName;
-    private String propertyType;
-    private String propertyDesc;
+    private String propertyTypeId;
+    private String remark;
     private String columnName;
-    private String columnType;
-    private Integer columnTypeLength;
-    private String columnDesc;
+    private String columnTypeId;
+    private Integer columnLength;
     private Integer sortNo;
     private String createUser;
     private Date createTime;
@@ -36,22 +30,15 @@ public enum DefaultModelDetail {
     private Date modifyTime;
     private Integer deleteFlag;
 
-    DefaultModelDetail(String id, String modelId, String propertyName, String propertyType, String propertyDesc, String columnName, String columnType, Integer columnTypeLength, String columnDesc, Integer sortNo, String createUser, Date createTime, String modifyUser, Date modifyTime, Integer deleteFlag) {
-        this.id = id;
-        this.modelId = modelId;
+    DefaultModelDetail(String propertyName, String propertyTypeId, String remark, String columnName, String columnTypeId, Integer columnLength, Integer sortNo) {
         this.propertyName = propertyName;
-        this.propertyType = propertyType;
-        this.propertyDesc = propertyDesc;
+        this.propertyTypeId = propertyTypeId;
+        this.remark = remark;
         this.columnName = columnName;
-        this.columnType = columnType;
-        this.columnTypeLength = columnTypeLength;
-        this.columnDesc = columnDesc;
+        this.columnTypeId = columnTypeId;
+        this.columnLength = columnLength;
         this.sortNo = sortNo;
-        this.createUser = createUser;
-        this.createTime = createTime;
-        this.modifyUser = modifyUser;
-        this.modifyTime = modifyTime;
-        this.deleteFlag = deleteFlag;
+        this.createUser = "";
     }
 
     public String getId() {
@@ -78,20 +65,20 @@ public enum DefaultModelDetail {
         this.propertyName = propertyName;
     }
 
-    public String getPropertyType() {
-        return propertyType;
+    public String getPropertyTypeId() {
+        return propertyTypeId;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public void setPropertyTypeId(String propertyTypeId) {
+        this.propertyTypeId = propertyTypeId;
     }
 
-    public String getPropertyDesc() {
-        return propertyDesc;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setPropertyDesc(String propertyDesc) {
-        this.propertyDesc = propertyDesc;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getColumnName() {
@@ -102,28 +89,20 @@ public enum DefaultModelDetail {
         this.columnName = columnName;
     }
 
-    public String getColumnType() {
-        return columnType;
+    public String getColumnTypeId() {
+        return columnTypeId;
     }
 
-    public void setColumnType(String columnType) {
-        this.columnType = columnType;
+    public void setColumnTypeId(String columnTypeId) {
+        this.columnTypeId = columnTypeId;
     }
 
-    public Integer getColumnTypeLength() {
-        return columnTypeLength;
+    public Integer getColumnLength() {
+        return columnLength;
     }
 
-    public void setColumnTypeLength(Integer columnTypeLength) {
-        this.columnTypeLength = columnTypeLength;
-    }
-
-    public String getColumnDesc() {
-        return columnDesc;
-    }
-
-    public void setColumnDesc(String columnDesc) {
-        this.columnDesc = columnDesc;
+    public void setColumnLength(Integer columnLength) {
+        this.columnLength = columnLength;
     }
 
     public Integer getSortNo() {
