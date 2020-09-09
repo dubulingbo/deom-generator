@@ -44,7 +44,7 @@ class DemoGeneratorApplicationTests {
     @Autowired
     private SnowflakeIdWorker idWorker;
 
-    @Test
+//    @Test
 //    @Transactional
     void contextLoads() {
         String[] beanDefinitionNames = api.getBeanDefinitionNames();
