@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="{{qualifiedMapperName}}">
+    <!-- 定义表名 -->
+    <sql id="tableName">{{tableName}}</sql>
+    <!-- 定义全部列名 -->
+    <sql id="columnName">
+        {{columnNameItems}}
+    </sql>
+    <!-- 将表中的各字段映射到实体类中的相应属性 -->
+    <resultMap id="{{aliasModelName}}" type="{{qualifiedModelName}}">
+        <result column="id" property="id"/>
+        {{resultMapZone}}
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="delete_flag" property="deleteFlag"/>
+    </resultMap>
+
+    <!-- 不带表别名的判断条件语句 -->
+    <sql id="condition">
+        {{conditionZone}}
+        <if test="createUser != null and createUser != ''">
+            and create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+    <!-- 带表别名 a 的判断条件语句 -->
+    <sql id="aliasCondition">
+        {{aliasConditionZone}}
+        <if test="createUser != null and createUser != ''">
+            and a.create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and a.create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and a.modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and a.modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+
+    <insert id="add" parameterType="{{qualifiedModelName}}">
+        insert into <include refid="tableName"/> (
+            <include refid="columnName"/>
+        )
+        values (
+            #{id}, {{insertColItems}} #{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
+        )
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from <include refid="tableName"/> where id = #{id}
+    </delete>
+    <update id="update" parameterType="{{qualifiedModelName}}">
+        update <include refid="tableName"/>
+        set
+        <trim suffixOverrides=",">
+            {{updateColItems}}
+            create_user = #{createUser},
+            create_time = #{createTime},
+            modify_user = #{modifyUser},
+            modify_time = #{modifyTime},
+            delete_flag = #{deleteFlag},
+        </trim>
+        where id = #{id}
+    </update>
+    <select id="get" parameterType="String" resultMap="{{aliasModelName}}">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/>
+        where id = #{id} and delete_flag = 0
+    </select>
+    <select id="listAll" resultMap="{{aliasModelName}}">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/>
+        where delete_flag = 0
+    </select>
+    <select id="select" parameterType="Map" resultType="{{aliasModelName}}">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/> a
+        where a.delete_flag = 0 <include refid="aliasCondition"/>
+        <if test="_order != null and _order != ''">
+            order by #{_order}
+            <if test="_sort != null and _sort != ''">
+                #{_sort}
+            </if>
+        </if>
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="Map">
+        select count(1)
+        from <include refid="tableName"/>
+        where delete_flag = 0
+            <include refid="condition"/>
+    </select>
+</mapper>
