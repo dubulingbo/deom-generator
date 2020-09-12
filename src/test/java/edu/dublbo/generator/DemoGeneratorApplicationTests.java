@@ -1,5 +1,6 @@
 package edu.dublbo.generator;
 
+import edu.dublbo.generator.dao.RedisUtil;
 import edu.dublbo.generator.entity.TDemoColumnType;
 import edu.dublbo.generator.entity.TDemoPropertyType;
 import edu.dublbo.generator.mapper.TDemoModelDetailMapper;
@@ -28,6 +29,9 @@ class DemoGeneratorApplicationTests {
     private static final Logger logger = LoggerFactory.getLogger(DemoGeneratorApplicationTests.class);
     @Autowired
     private ApplicationContext api;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Autowired
     SqlSessionFactory factory;
@@ -66,10 +70,12 @@ class DemoGeneratorApplicationTests {
 //        }
 
 
-        List<String> list = detailService.demoGenerate("752650572775436288");
-        for (String s : list) {
-            System.out.print(s);
-        }
+//        List<String> list = detailService.demoGenerate("752650572775436288");
+//        for (String s : list) {
+//            System.out.print(s);
+//        }
+        System.out.println(redisUtil.get("abc"));
+
     }
 
     void test01() {
