@@ -66,10 +66,10 @@ public class DemoModelController {
     public Result<Map<String, Object>> list(@RequestParam(value = "modelName", required = false) String modelName) {
         Map<String, Object> condition = new HashMap<>();
         logger.info("modelName : {}", modelName);
-        condition.put("name", modelName == null? null :modelName.trim());
-        condition.put("_order","modify_time");
-        condition.put("_sort","DESC");
-        logger.info("delete flag : {}",condition.get("deleteFlag") == null?null:condition.get("deleteFlag").toString());
+        condition.put("name", modelName == null ? null : modelName.trim());
+        condition.put("_order", "modify_time");
+        condition.put("_sort", "DESC");
+//        logger.info("delete flag : {}", condition.get("deleteFlag") == null ? null : condition.get("deleteFlag").toString());
         List<TDemoModel> all = service.list(condition);
 
         Map<String, Object> records = new HashMap<>();
