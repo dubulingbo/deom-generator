@@ -217,4 +217,8 @@ public class DemoModelService {
         return mapper.listAll();
     }
 
+    public List<TDemoModel> list(Map<String, Object> condition) {
+
+        return mapper.select(condition);
+    }
 }

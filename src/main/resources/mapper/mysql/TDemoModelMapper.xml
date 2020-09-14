@@ -29,6 +29,7 @@
     </sql>
 
 
+
     <insert id="add" parameterType="edu.dublbo.generator.entity.TDemoModel">
         insert into <include refid="tableName"/> (
             <include refid="columnName"/>
@@ -72,6 +73,58 @@
         select <include refid="columnName"/>
         from <include refid="tableName"/>
         where delete_flag = 0
+    </select>
+
+    <sql id="condition">
+        <if test="name != null and name != ''">
+            and name like CONCAT('%',#{name},'%')
+        </if>
+        <if test="remark != null and remark != ''">
+            and remark = #{remark}
+        </if>
+        <if test="tableName != null and tableName != ''">
+            and table_name = #{tableName}
+        </if>
+        <if test="sortNo != null and sortNo != ''">
+            and sort_no = #{sortNo}
+        </if>
+        <if test="modelName != null and modelName != ''">
+            and model_name = #{modelName}
+        </if>
+        <if test="packageDir != null and packageDir != ''">
+            and package_dir = #{packageDir}
+        </if>
+        <if test="packageDir2 != null and packageDir2 != ''">
+            and package_dir2 = #{packageDir2}
+        </if>
+        <if test="createUser != null and createUser != ''">
+            and create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+
+    <select id="select" parameterType="Map" resultMap="tDemoModel">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/>
+        where delete_flag = 0
+            <include refid="condition"/>
+        <if test="_order != null and _order != ''">
+            order by #{_order}
+            <if test="_sort != null and _sort != ''">
+                #{_sort}
+            </if>
+        </if>
     </select>
 
 </mapper>

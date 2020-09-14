@@ -3,6 +3,7 @@ package edu.dublbo.generator.mapper;
 import edu.dublbo.generator.entity.TDemoModel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author DubLBo
@@ -14,4 +15,5 @@ public interface TDemoModelMapper {
     void update(TDemoModel entity);
     TDemoModel get(String id);
     List<TDemoModel> listAll();
+    List<TDemoModel> select(Map<String, Object> condition);
 }

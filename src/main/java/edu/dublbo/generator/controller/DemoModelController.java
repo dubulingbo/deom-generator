@@ -10,6 +10,8 @@ import edu.dublbo.generator.entity.TDemoModel;
 import edu.dublbo.generator.utils.Constant;
 import edu.dublbo.generator.utils.WebObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/demo/model")
 public class DemoModelController {
+    private static final Logger logger = LoggerFactory.getLogger(DemoModelController.class);
     private DemoModelService service;
 
     @Autowired
@@ -60,8 +63,15 @@ public class DemoModelController {
 
     // 查询所有存在的模型
     @GetMapping("/s")
-    public Result<Map<String, Object>> list() {
-        List<TDemoModel> all = service.listAll();
+    public Result<Map<String, Object>> list(@RequestParam(value = "modelName", required = false) String modelName) {
+        Map<String, Object> condition = new HashMap<>();
+        logger.info("modelName : {}", modelName);
+        condition.put("name", modelName == null? null :modelName.trim());
+        condition.put("_order","modify_time");
+        condition.put("_sort","DESC");
+        logger.info("delete flag : {}",condition.get("deleteFlag") == null?null:condition.get("deleteFlag").toString());
+        List<TDemoModel> all = service.list(condition);
+
         Map<String, Object> records = new HashMap<>();
         records.put("records", all);
         return ResponseResult.generateSuccessResult(records);
