@@ -13,7 +13,7 @@ public class DemoUtils {
     /**
      * 将模型名转化为表名
      *
-     * @param modelName 模型名（不带包路径）
+     * @param modelName 模型名（不带包路径），建议包含前缀
      * @return 表名
      */
     public static String modelName2TableName(String modelName) {
@@ -21,16 +21,12 @@ public class DemoUtils {
             throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型名为空");
         }
 
-        StringBuilder sb = new StringBuilder("t_");
-        for (int i = 0; i < modelName.length(); i++) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(modelName.substring(0,1).toLowerCase());
+        for (int i = 1; i < modelName.length(); i++) {
             char target = modelName.charAt(i);
             if (target >= 'A' && target <= 'Z') {
-                // 不是第一个
-                if(i != 0){
-                    sb.append("_").append((char) (target + 32));
-                }else{
-                    sb.append((char) (target + 32));
-                }
+                sb.append("_").append((char) (target + 32));
             } else {
                 sb.append(target);
             }
@@ -38,11 +34,10 @@ public class DemoUtils {
         return sb.toString();
     }
 
-//    public static void main(String[] args) {
-//        String s = "asadaT1213TTBsada";
-//        System.out.println(s.toUpperCase());
-//        System.out.println(s.toLowerCase());
-//
-//    }
+    public static void main(String[] args) {
+        String s = "ASadaT1213TTBsada";
+        System.out.println(DemoUtils.modelName2TableName(s));
+
+    }
 
 }

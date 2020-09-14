@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
@@ -56,48 +58,24 @@ public class DemoModelService {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型名或类模型说明为空");
         }
 
-
         // 添加模型表
         Date curDate = new Date();
         String id = idWorker.nextStringId();
-        // 生成模型名和表名，并分解模型名：一级包名，二级包名，类名称
-        String qualifiedModelName = entity.getName();
-        if (qualifiedModelName.endsWith(".")) {
-            throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型名以点号结尾");
-        }
-        // 是否带包路径，不带包路径，使用默认包路径
-        String packageDir;
-        String packageDir2;
-        String modelName;
-        int point = qualifiedModelName.lastIndexOf(".");
-        if (point == -1) { // 不带包路径
-            modelName = qualifiedModelName;
-            qualifiedModelName = "com.example.model" + qualifiedModelName;
-            packageDir = "com.example.model";
-            packageDir2 = "com.example";
-        } else { // 带包路径
-            // 检查是否含有两级目录
-            if (qualifiedModelName.split("\\.").length <= 2) {
-                throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径错误：模型的路径至少要含有两级");
-            }
-            modelName = qualifiedModelName.substring(point + 1);
-            packageDir = qualifiedModelName.substring(0, point);
-            point = packageDir.lastIndexOf(".");
-            packageDir2 = qualifiedModelName.substring(0, point);
-        }
 
-        logger.info("modelName={}, packageDir={}, packageDir2={}", modelName, packageDir, packageDir2);
-        if(StringUtils.isEmpty(modelName) || StringUtils.isEmpty(packageDir)
-                || StringUtils.isEmpty(packageDir2)){
+        Map<String, String> someModelInfos = genSomeModelInfo(entity.getName());
+        // 二次验证
+        if (StringUtils.isEmpty(someModelInfos.get("qualifiedModelName")) || StringUtils.isEmpty(someModelInfos.get("modelName"))
+                || StringUtils.isEmpty(someModelInfos.get("packageDir"))
+                || StringUtils.isEmpty(someModelInfos.get("packageDir2"))
+                || StringUtils.isEmpty(someModelInfos.get("tableName"))) {
             throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径或模型名为空");
         }
 
-        String tableName = DemoUtils.modelName2TableName(modelName);
-        entity.setName(qualifiedModelName);
-        entity.setModelName(modelName);
-        entity.setPackageDir(packageDir);
-        entity.setPackageDir2(packageDir2);
-        entity.setTableName(tableName);
+        entity.setName(someModelInfos.get("qualifiedModelName"));
+        entity.setModelName(someModelInfos.get("modelName"));
+        entity.setPackageDir(someModelInfos.get("packageDir"));
+        entity.setPackageDir2(someModelInfos.get("packageDir2"));
+        entity.setTableName(someModelInfos.get("tableName"));
         entity.setId(id);
         entity.setCreateUser(Constant.CURRENT_USER);
         entity.setCreateTime(curDate);
@@ -139,26 +117,56 @@ public class DemoModelService {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型名或类模型说明为空");
         }
 
+        Map<String, String> someModelInfos = genSomeModelInfo(entity.getName());
 
-        // 重新生成模型名和表名，并分解模型名：一级包名，二级包名，类名称
-        String qualifiedModelName = entity.getName();
+        // 二次验证
+        if (StringUtils.isEmpty(someModelInfos.get("qualifiedModelName")) || StringUtils.isEmpty(someModelInfos.get("modelName"))
+                || StringUtils.isEmpty(someModelInfos.get("packageDir"))
+                || StringUtils.isEmpty(someModelInfos.get("packageDir2"))
+                || StringUtils.isEmpty(someModelInfos.get("tableName"))) {
+            throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径或模型名为空");
+        }
+
+        entity.setName(someModelInfos.get("qualifiedModelName"));
+        entity.setModelName(someModelInfos.get("modelName"));
+        entity.setPackageDir(someModelInfos.get("packageDir"));
+        entity.setPackageDir2(someModelInfos.get("packageDir2"));
+        entity.setTableName(someModelInfos.get("tableName"));
+        entity.setModifyUser(Constant.CURRENT_USER);
+        entity.setModifyTime(new Date());
+        mapper.update(entity);
+    }
+
+    /**
+     * 重新生成模型名和表名，并分解模型名：一级包名，二级包名，类名称
+     *
+     * @param qualifiedModelName 带包路径的表名，不能为空
+     * @return 信息的 HashMap 集合
+     */
+    private Map<String, String> genSomeModelInfo(String qualifiedModelName) {
+        if (StringUtils.isEmpty(qualifiedModelName) || StringUtils.isBlank(qualifiedModelName)) {
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型名为空");
+        }
+
         if (qualifiedModelName.endsWith(".")) {
-            throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型名以点号结尾");
+            throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型名不合法：模型名以点号结尾");
         }
         // 是否带包路径，不带包路径，使用默认包路径
         String packageDir;
         String packageDir2;
         String modelName;
+        String tableName;
         int point = qualifiedModelName.lastIndexOf(".");
         if (point == -1) { // 不带包路径
             modelName = qualifiedModelName;
-            qualifiedModelName = "com.example.model" + qualifiedModelName;
-            packageDir = "com.example.model";
-            packageDir2 = "com.example";
+            qualifiedModelName = "com.example.basic.model" + qualifiedModelName;
+            // 组织名.项目名称.模块名.model.模型名（带前缀）
+            packageDir = "com.example.basic.model";
+            packageDir2 = "com.example.basic";
         } else { // 带包路径
             // 检查是否含有两级目录
-            if (qualifiedModelName.split("\\.").length < 3) {
-                throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径错误：模型的路径至少要含有两级");
+            if (qualifiedModelName.split("\\.").length < 4) {
+                throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径错误：模型的路径至少要含有三级");
             }
             modelName = qualifiedModelName.substring(point + 1);
             packageDir = qualifiedModelName.substring(0, point);
@@ -166,21 +174,17 @@ public class DemoModelService {
             packageDir2 = qualifiedModelName.substring(0, point);
         }
 
-        logger.info("modelName={}, packageDir={}, packageDir2={}", modelName, packageDir, packageDir2);
-        if(StringUtils.isEmpty(modelName) || StringUtils.isEmpty(packageDir)
-                || StringUtils.isEmpty(packageDir2)){
-            throw new DataErrorException(ResponseStatus.DATA_ERROR.getCode(), "模型路径或模型名为空");
-        }
+        //生成表名
+        tableName = DemoUtils.modelName2TableName(modelName);
 
-        String tableName = DemoUtils.modelName2TableName(modelName);
-        entity.setName(qualifiedModelName);
-        entity.setModelName(modelName);
-        entity.setPackageDir(packageDir);
-        entity.setPackageDir2(packageDir2);
-        entity.setTableName(tableName);
-        entity.setModifyUser(Constant.CURRENT_USER);
-        entity.setModifyTime(new Date());
-        mapper.update(entity);
+        logger.info("modelName={}, packageDir={}, packageDir2={}", modelName, packageDir, packageDir2);
+        Map<String, String> res = new HashMap<>();
+        res.put("qualifiedModelName", qualifiedModelName);
+        res.put("tableName", tableName);
+        res.put("modelName", modelName);
+        res.put("packageDir", packageDir);
+        res.put("packageDir2", packageDir2);
+        return res;
     }
 
     @Transactional
