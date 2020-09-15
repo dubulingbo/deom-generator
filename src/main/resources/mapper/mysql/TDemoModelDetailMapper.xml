@@ -14,6 +14,7 @@
         <result column="column_type_id" property="columnTypeId"/>
         <result column="column_length" property="columnLength"/>
         <result column="sort_no" property="sortNo"/>
+        <result column="inherent_flag" property="inherentFlag"/>
         <result column="create_user" property="createUser"/>
         <result column="create_time" property="createTime"/>
         <result column="modify_user" property="modifyUser"/>
@@ -26,7 +27,7 @@
 
     <!-- 定义全部列名 -->
     <sql id="columnName">
-        id,model_id,property_name,property_type_id,remark,column_name,column_type_id,column_length,sort_no,create_user,create_time,modify_user,modify_time,delete_flag
+        id,model_id,property_name,property_type_id,remark,column_name,column_type_id,column_length,sort_no,,inherent_flag,create_user,create_time,modify_user,modify_time,delete_flag
     </sql>
 
     <!-- 不带别名的判断条件语句 -->
@@ -54,6 +55,9 @@
         </if>
         <if test="sortNo != null and sortNo != ''">
             and sort_no = #{sortNo}
+        </if>
+        <if test="inherentFlag != null and inherentFlag != ''">
+            and inherent_flag = #{inherentFlag}
         </if>
         <if test="createUser != null and createUser != ''">
             and create_user = #{createUser}
@@ -98,6 +102,9 @@
         <if test="sortNo != null and sortNo != ''">
             and a.sort_no = #{sortNo}
         </if>
+        <if test="inherentFlag != null and inherentFlag != ''">
+            and a.inherent_flag = #{inherentFlag}
+        </if>
         <if test="createUser != null and createUser != ''">
             and a.create_user = #{createUser}
         </if>
@@ -122,7 +129,7 @@
         values (
             #{id},#{modelId},#{propertyName},#{propertyTypeId},
             #{remark},#{columnName},#{columnTypeId},#{columnLength},
-            #{sortNo},#{createUser},#{createTime},#{modifyUser},
+            #{sortNo},#{inherentFlag},#{createUser},#{createTime},#{modifyUser},
             #{modifyTime},#{deleteFlag}
         )
     </insert>
@@ -143,6 +150,7 @@
             column_type_id = #{columnTypeId},
             column_length = #{columnLength},
             sort_no = #{sortNo},
+            inherent_flag = #{inherentFlag},
             create_user = #{createUser},
             create_time = #{createTime},
             modify_user = #{modifyUser},
@@ -185,6 +193,7 @@
             a.column_type_id as "columnTypeId",
             a.column_length as "columnLength",
             a.sort_no as "sortNo",
+            a.inherent_flag as "inherentFlag",
             a.create_user as "createUser",
             a.create_time as "createTime",
             a.modify_user as "modifyUser",
@@ -200,9 +209,10 @@
         where a.delete_flag = 0
             <include refid="condition_a"/>
         <if test="_order != null and _order != ''">
-            order by #{_order}
+            <!-- 在动态SQL阶段就注入 -->
+            order by ${_order}
             <if test="_sort != null and _sort != ''">
-                #{_sort}
+                ${_sort}
             </if>
         </if>
     </select>
@@ -223,6 +233,7 @@
                     #{model.columnTypeId},
                     #{model.columnLength},
                     #{model.sortNo},
+                    #{model.inherentFlag},
                     #{model.createUser},
                     #{model.createTime},
                     #{model.modifyUser},

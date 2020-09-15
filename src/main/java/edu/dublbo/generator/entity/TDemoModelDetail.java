@@ -36,6 +36,8 @@ public class TDemoModelDetail implements Serializable {
     private Integer columnLength;
     // 排序，默认为900
     private Integer sortNo;
+    // 不可删除标记
+    private Integer inherentFlag;
     // 创建人
     private String createUser;
     // 创建时间
@@ -127,6 +129,14 @@ public class TDemoModelDetail implements Serializable {
 
     public void setSortNo(Integer sortNo) {
         this.sortNo = sortNo;
+    }
+
+    public Integer getInherentFlag() {
+        return inherentFlag;
+    }
+
+    public void setInherentFlag(Integer inherentFlag) {
+        this.inherentFlag = inherentFlag;
     }
 
     public String getCreateUser() {

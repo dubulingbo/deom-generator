@@ -9,6 +9,7 @@ create table `t_demo_model_detail`(
     `column_type_id` varchar(32) comment '表字段类型ID' ,
     `column_length` int comment '表字段长度' ,
     `sort_no` int comment '序号' ,
+    `inherent_flag` tinyint default 0 comment '是否时固有的标记（1：不能删除，0：可删除（默认））' ,
 	`create_user` varchar(64) comment '创建人' ,
 	`create_time` datetime comment '创建时间' ,
 	`modify_user` varchar(64) comment '最后更新人' ,

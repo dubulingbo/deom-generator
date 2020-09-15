@@ -76,6 +76,15 @@ public class DemoModelDetailService {
         if (model == null) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新后重试");
         }
+
+        // 判断属性名是否已存在
+        Map<String, Object> con = new HashMap<>();
+        con.put("propertyName",modelDetail.getPropertyName());
+        List<TDemoModelDetail> list = mapper.select(con);
+        if(list != null && list.size() != 0){
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "属性名已存在");
+        }
+
         // 从Http请求中取值
         WebObjectUtils.assignObjectField(request, modelDetail, "propertyName", "propertyTypeId", "remark", "columnName", "columnTypeId");
         // 修改一些必要的字段
@@ -107,6 +116,14 @@ public class DemoModelDetailService {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新后重试");
         }
 
+        // 判断属性名是否已存在
+        Map<String, Object> con = new HashMap<>();
+        con.put("propertyName",entity.getPropertyName());
+        List<TDemoModelDetail> list = mapper.select(con);
+        if(list != null && list.size() != 0){
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "属性名已存在");
+        }
+
         Date curDate = new Date();
         entity.setId(idWorker.nextStringId());
         entity.setCreateUser(Constant.CURRENT_USER);
@@ -114,6 +131,7 @@ public class DemoModelDetailService {
         entity.setModifyUser(Constant.CURRENT_USER);
         entity.setModifyTime(curDate);
         entity.setDeleteFlag(0);
+        entity.setInherentFlag(0);
         mapper.add(entity);
 
         return entity;
@@ -126,10 +144,15 @@ public class DemoModelDetailService {
         if (modelDetail == null) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "要删除的模型明细不存在");
         }
-        // 判断模型是否存在
-        TDemoModel model = modelMapper.get(modelDetail.getModelId());
-        if (model == null) {
-            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新后重试");
+
+//        // 判断模型是否存在
+//        TDemoModel model = modelMapper.get(modelDetail.getModelId());
+//        if (model == null) {
+//            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新后重试");
+//        }
+        // 判断该明细是否为固有的，即不可删除
+        if(modelDetail.getInherentFlag() == 1){
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "该属性为模型的固有属性，不可删除");
         }
 
         modelDetail.setModifyUser(Constant.CURRENT_USER);
