@@ -1,9 +1,7 @@
 package edu.dublbo.generator.service;
 
-import edu.dublbo.generator.common.exception.DataErrorException;
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
-import edu.dublbo.generator.common.result.ResponseStatus;
 import edu.dublbo.generator.entity.TDemoModel;
 import edu.dublbo.generator.entity.TDemoModelDetail;
 import edu.dublbo.generator.mapper.TDemoModelDetailMapper;
@@ -17,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -79,9 +75,9 @@ public class DemoModelDetailService {
 
         // 判断属性名是否已存在
         Map<String, Object> con = new HashMap<>();
-        con.put("propertyName",modelDetail.getPropertyName());
+        con.put("propertyName", modelDetail.getPropertyName());
         List<TDemoModelDetail> list = mapper.select(con);
-        if(list != null && list.size() != 0){
+        if (list != null && list.size() != 0) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "属性名已存在");
         }
 
@@ -118,11 +114,37 @@ public class DemoModelDetailService {
 
         // 判断属性名是否已存在
         Map<String, Object> con = new HashMap<>();
-        con.put("propertyName",entity.getPropertyName());
+        con.put("modelId", model.getId());
+        con.put("propertyName", entity.getPropertyName());
         List<TDemoModelDetail> list = mapper.select(con);
-        if(list != null && list.size() != 0){
+        if (list != null && list.size() != 0) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "属性名已存在");
         }
+
+        // 生成序号
+        con.clear();
+        con.put("modelId", model.getId());
+        List<TDemoModelDetail> details = mapper.select(con);
+        if (details == null || details.size() == 0) {
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "系统尚未处理没有属性的模型，请自行实现 #2333#");
+        }
+        Set<Integer> sortNoSet = new HashSet<>();
+        for (TDemoModelDetail de : details) {
+            if (de.getSortNo() != null) {
+                sortNoSet.add(de.getSortNo());
+            }
+        }
+        List<Integer> sortNos = new ArrayList<>(sortNoSet);
+        int sortNo = DemoUtils.generateNextSortNo(sortNos);
+
+        // 想试试有序集合，但是有点力不从心，好像本次可以不用借助它实现也可以。。。。
+//        SortedSet<Integer> sortNoSet = new TreeSet<>();
+//        for(TDemoModelDetail de : details){
+//            if(de.getSortNo() != null){
+//                sortNoSet.add(de.getSortNo());
+//            }
+//        }
+        logger.info("=========sortNooooo : " + sortNo);
 
         Date curDate = new Date();
         entity.setId(idWorker.nextStringId());
@@ -132,6 +154,7 @@ public class DemoModelDetailService {
         entity.setModifyTime(curDate);
         entity.setDeleteFlag(0);
         entity.setInherentFlag(0);
+        entity.setSortNo(sortNo);
         mapper.add(entity);
 
         return entity;
@@ -151,7 +174,7 @@ public class DemoModelDetailService {
 //            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新后重试");
 //        }
         // 判断该明细是否为固有的，即不可删除
-        if(modelDetail.getInherentFlag() == 1){
+        if (modelDetail.getInherentFlag() == 1) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "该属性为模型的固有属性，不可删除");
         }
 
@@ -210,7 +233,7 @@ public class DemoModelDetailService {
                 proNames.add(de.getPropertyName());
                 proTypeMap.put(de.getPropertyName(), de.getProType());
                 proDescMap.put(de.getPropertyName(), de.getRemark());
-                colNameMap.put(de.getPropertyName(),de.getColumnName());
+                colNameMap.put(de.getPropertyName(), de.getColumnName());
             }
             if (!StringUtils.isEmpty(de.getQualifiedProType()) && !de.getQualifiedProType().contains("java.lang")) {
                 packageSet.add(de.getQualifiedProType());

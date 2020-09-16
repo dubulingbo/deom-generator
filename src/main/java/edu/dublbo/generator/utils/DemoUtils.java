@@ -2,6 +2,9 @@ package edu.dublbo.generator.utils;
 
 import edu.dublbo.generator.common.exception.DataErrorException;
 import edu.dublbo.generator.common.result.ResponseStatus;
+import edu.dublbo.generator.entity.TDemoModelDetail;
+
+import java.util.List;
 
 /**
  * @author DubLBo
@@ -32,6 +35,36 @@ public class DemoUtils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 生成模型明细中的下一个序号
+     * @param array 已有的序号
+     */
+    public static Integer generateNextSortNo(List<Integer> array){
+        if(array == null || array.size() == 0){
+            return Constant.MODEL_DETAIL_SORTNO_MIN_POS;
+        }
+        int var1 = Integer.MIN_VALUE;
+        int var2 = Integer.MAX_VALUE;
+        for (Integer tmp : array) {
+            if (tmp != null) {
+                // 寻找比最小基准数 小的 最大的数
+                if (tmp < Constant.MODEL_DETAIL_SORTNO_MIN_POS && tmp > var1) {
+                    var1 = tmp;
+                }
+                // 寻找比最大基数 大的 最小的数
+                if (tmp > Constant.MODEL_DETAIL_SORTNO_MAX_POS && tmp < var2) {
+                    var2 = tmp;
+                }
+            }
+        }
+
+        // 在最小的基数范围下的数已经取完
+        if (var1 + 1 == Constant.MODEL_DETAIL_SORTNO_MIN_POS) {
+            return var2 == Integer.MAX_VALUE ? Constant.MODEL_DETAIL_SORTNO_MAX_POS + 1 : var2 + 1;
+        }
+        return var1 == Integer.MIN_VALUE ? Constant.MODEL_DETAIL_SORTNO_MIN_POS - 1 : var1 + 1;
     }
 
     public static void main(String[] args) {
