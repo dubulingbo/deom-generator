@@ -209,8 +209,8 @@
         where a.delete_flag = 0
             <include refid="condition_a"/>
         <if test="_order != null and _order != ''">
-            <!-- 在动态SQL阶段就注入 -->
-            order by ${_order}
+            <!-- ${}在动态SQL阶段就注入；而#{}是在DBMS中注入，应该是查询到数据后，且 order by子句不能不会达到预期效果 -->
+            order by a.${_order}
             <if test="_sort != null and _sort != ''">
                 ${_sort}
             </if>

@@ -1,5 +1,7 @@
 package edu.dublbo.generator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.dublbo.generator.dao.RedisUtil;
 import edu.dublbo.generator.entity.TDemoColumnType;
 import edu.dublbo.generator.entity.TDemoModel;
@@ -13,6 +15,8 @@ import edu.dublbo.generator.utils.SnowflakeIdWorker;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.json.JSONObject;
+import org.json.JSONString;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,9 +41,12 @@ class DemoGeneratorApplicationTests {
     @Autowired
     private DemoModelService service;
 
-    @Test
+    @Autowired
+    private DemoModelDetailService detailService;
+
+//    @Test
 //    @Transactional
-    void contextLoads() {
+    void contextLoads() throws JsonProcessingException {
 //        String[] beanDefinitionNames = api.getBeanDefinitionNames();
 //        if(beanDefinitionNames == null || beanDefinitionNames.length == 0){
 //            logger.error("bean is empty!");
@@ -64,7 +71,7 @@ class DemoGeneratorApplicationTests {
 //            System.out.print(s);
 //        }
 //        System.out.println(redisUtil.get("abc"));
-        Map<String, Object> condition = new HashMap<>();
+        /*Map<String, Object> condition = new HashMap<>();
         condition.put("name", "");
         condition.put("_order", "modify_time");
         condition.put("_sort", "DESC");
@@ -72,7 +79,12 @@ class DemoGeneratorApplicationTests {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(TDemoModel s : list){
             System.out.println(sdf.format(s.getCreateTime()) + "\t" +sdf.format(s.getModifyTime()));
-        }
+        }*/
+
+        Map<String, Object> list = detailService.list("752656162054615040");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        logger.info(objectMapper.writeValueAsString(list));
 
     }
 
