@@ -76,8 +76,11 @@ public class DemoModelDetailService {
         // 判断属性名是否已存在
         Map<String, Object> con = new HashMap<>();
         con.put("propertyName", modelDetail.getPropertyName());
-        List<TDemoModelDetail> list = mapper.select(con);
-        if (list != null && list.size() != 0) {
+        con.put("modelId",model.getId());
+        con.put("id",modelDetail.getId());
+
+        Integer num = mapper.select1(con);
+        if (num != null && num != 0) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "属性名已存在");
         }
 

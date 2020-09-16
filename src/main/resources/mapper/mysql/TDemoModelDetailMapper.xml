@@ -27,7 +27,7 @@
 
     <!-- 定义全部列名 -->
     <sql id="columnName">
-        id,model_id,property_name,property_type_id,remark,column_name,column_type_id,column_length,sort_no,,inherent_flag,create_user,create_time,modify_user,modify_time,delete_flag
+        id,model_id,property_name,property_type_id,remark,column_name,column_type_id,column_length,sort_no,inherent_flag,create_user,create_time,modify_user,modify_time,delete_flag
     </sql>
 
     <!-- 不带别名的判断条件语句 -->
@@ -215,6 +215,14 @@
                 ${_sort}
             </if>
         </if>
+    </select>
+
+    <select id="select1" parameterType="Map" resultType="Integer">
+        select
+            count(1)
+        from <include refid="tableName"/>
+        where delete_flag = 0 and id != #{id}
+        <include refid="condition"/>
     </select>
 
     <insert id="batchAdd" parameterType="java.util.List">

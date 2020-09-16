@@ -23,4 +23,6 @@ public interface TDemoModelDetailMapper {
 
     void addProType(TDemoPropertyType entity);
     void addColType(TDemoColumnType entity);
+
+    Integer select1(Map<String, Object> con);
 }

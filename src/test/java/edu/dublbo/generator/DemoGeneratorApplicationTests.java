@@ -9,6 +9,7 @@ import edu.dublbo.generator.entity.TDemoPropertyType;
 import edu.dublbo.generator.mapper.TDemoModelDetailMapper;
 import edu.dublbo.generator.service.DemoModelDetailService;
 import edu.dublbo.generator.service.DemoModelService;
+import edu.dublbo.generator.service.DemoPropertyTypeService;
 import edu.dublbo.generator.utils.Constant;
 import edu.dublbo.generator.utils.FileOperator;
 import edu.dublbo.generator.utils.SnowflakeIdWorker;
@@ -43,6 +44,8 @@ class DemoGeneratorApplicationTests {
 
     @Autowired
     private DemoModelDetailService detailService;
+    @Autowired
+    private DemoPropertyTypeService typeService;
 
 //    @Test
 //    @Transactional
@@ -81,10 +84,14 @@ class DemoGeneratorApplicationTests {
             System.out.println(sdf.format(s.getCreateTime()) + "\t" +sdf.format(s.getModifyTime()));
         }*/
 
-        Map<String, Object> list = detailService.list("752656162054615040");
+        /*Map<String, Object> list = detailService.list("752656162054615040");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        logger.info(objectMapper.writeValueAsString(list));
+        logger.info(objectMapper.writeValueAsString(list));*/
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        logger.info(objectMapper.writeValueAsString(typeService.listAll()));
+//        logger.info(typeService.listAll().toString());
 
     }
 
