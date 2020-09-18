@@ -2,7 +2,6 @@ package edu.dublbo.generator.utils;
 
 import edu.dublbo.generator.common.exception.DataErrorException;
 import edu.dublbo.generator.common.result.ResponseStatus;
-import edu.dublbo.generator.entity.TDemoModelDetail;
 
 import java.util.List;
 

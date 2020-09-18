@@ -1,8 +1,8 @@
-package edu.dublbo.generator.dao;
+package edu.dublbo.generator.demo.dao;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
-import edu.dublbo.generator.entity.TDemoModel;
+import edu.dublbo.generator.demo.entity.TDemoModel;
 import edu.dublbo.generator.utils.DBOperator;
 import org.springframework.stereotype.Repository;
 

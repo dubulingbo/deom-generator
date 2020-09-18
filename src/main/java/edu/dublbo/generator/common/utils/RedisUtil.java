@@ -1,4 +1,4 @@
-package edu.dublbo.generator.dao;
+package edu.dublbo.generator.common.utils;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package edu.dublbo.generator.entity;
+package edu.dublbo.generator.demo.entity;
 
 import java.util.Date;
 

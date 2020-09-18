@@ -1,4 +1,4 @@
-package edu.dublbo.generator.utils;
+package edu.dublbo.generator.common.utils;
 
 import org.apache.commons.lang3.ClassUtils;
 

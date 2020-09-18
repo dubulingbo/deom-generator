@@ -2,9 +2,9 @@
 <!DOCTYPE  mapper
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.dublbo.generator.mapper.TDemoModelDetailMapper">
+<mapper namespace="edu.dublbo.generator.demo.mapper.TDemoModelDetailMapper">
     <!-- 将表中的各字段映射到实体类中的相应属性 -->
-    <resultMap id="tDemoModelDetail" type="edu.dublbo.generator.entity.TDemoModelDetail">
+    <resultMap id="tDemoModelDetail" type="edu.dublbo.generator.demo.entity.TDemoModelDetail">
         <result column="id" property="id"/>
         <result column="model_id" property="modelId"/>
         <result column="property_name" property="propertyName"/>
@@ -122,7 +122,7 @@
         </if>
     </sql>
 
-    <insert id="add" parameterType="edu.dublbo.generator.entity.TDemoModelDetail">
+    <insert id="add" parameterType="edu.dublbo.generator.demo.entity.TDemoModelDetail">
         insert into <include refid="tableName"/> (
             <include refid="columnName"/>
         )
@@ -138,7 +138,7 @@
         delete from <include refid="tableName"/> where id = #{id}
     </delete>
 
-    <update id="update" parameterType="edu.dublbo.generator.entity.TDemoModelDetail">
+    <update id="update" parameterType="edu.dublbo.generator.demo.entity.TDemoModelDetail">
         update <include refid="tableName"/>
         set
         <trim suffixOverrides=",">
@@ -182,7 +182,7 @@
         where delete_flag = 0
     </select>
 
-    <select id="select" parameterType="Map" resultType="edu.dublbo.generator.entity.TDemoModelDetail">
+    <select id="select" parameterType="Map" resultType="edu.dublbo.generator.demo.entity.TDemoModelDetail">
         select
             a.id as "id",
             a.model_id as "modelId",
@@ -252,7 +252,7 @@
         </foreach>
     </insert>
 
-    <insert id="addProType" parameterType="edu.dublbo.generator.entity.TDemoPropertyType">
+    <insert id="addProType" parameterType="edu.dublbo.generator.demo.entity.TDemoPropertyType">
         insert into t_demo_property_type(
             id,name,qualified_name,sort_no,remark,create_user,create_time,modify_user,modify_time,delete_flag
         ) values (
@@ -262,7 +262,7 @@
         )
     </insert>
 
-    <insert id="addColType" parameterType="edu.dublbo.generator.entity.TDemoColumnType">
+    <insert id="addColType" parameterType="edu.dublbo.generator.demo.entity.TDemoColumnType">
         insert into t_demo_column_type(
             id,name,default_len,sort_no,remark,create_user,create_time,modify_user,modify_time,delete_flag
         ) values (

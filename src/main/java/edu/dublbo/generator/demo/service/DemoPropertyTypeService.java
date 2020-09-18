@@ -1,15 +1,13 @@
-package edu.dublbo.generator.service;
+package edu.dublbo.generator.demo.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
-import edu.dublbo.generator.dao.RedisUtil;
-import edu.dublbo.generator.entity.TDemoColumnType;
-import edu.dublbo.generator.entity.TDemoModel;
-import edu.dublbo.generator.entity.TDemoPropertyType;
-import edu.dublbo.generator.mapper.TDemoPropertyTypeMapper;
+import edu.dublbo.generator.common.utils.RedisUtil;
+import edu.dublbo.generator.demo.entity.TDemoColumnType;
+import edu.dublbo.generator.demo.entity.TDemoPropertyType;
+import edu.dublbo.generator.demo.mapper.TDemoPropertyTypeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

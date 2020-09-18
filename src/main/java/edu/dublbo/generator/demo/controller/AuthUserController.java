@@ -1,9 +1,9 @@
-package edu.dublbo.generator.controller;
+package edu.dublbo.generator.demo.controller;
 
 import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
-import edu.dublbo.generator.service.AuthUserService;
+import edu.dublbo.generator.demo.service.AuthUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -2,37 +2,14 @@ package edu.dublbo.generator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.dublbo.generator.dao.RedisUtil;
-import edu.dublbo.generator.entity.TDemoColumnType;
-import edu.dublbo.generator.entity.TDemoModel;
-import edu.dublbo.generator.entity.TDemoPropertyType;
-import edu.dublbo.generator.mapper.TDemoModelDetailMapper;
-import edu.dublbo.generator.service.DemoModelDetailService;
-import edu.dublbo.generator.service.DemoModelService;
-import edu.dublbo.generator.service.DemoPropertyTypeService;
-import edu.dublbo.generator.utils.Constant;
-import edu.dublbo.generator.utils.FileOperator;
-import edu.dublbo.generator.utils.SnowflakeIdWorker;
+import edu.dublbo.generator.demo.service.DemoModelDetailService;
+import edu.dublbo.generator.demo.service.DemoModelService;
+import edu.dublbo.generator.demo.service.DemoPropertyTypeService;
 
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.json.JSONObject;
-import org.json.JSONString;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Handler;
 
 
 @SpringBootTest

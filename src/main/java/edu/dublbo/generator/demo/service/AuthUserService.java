@@ -1,7 +1,7 @@
-package edu.dublbo.generator.service;
+package edu.dublbo.generator.demo.service;
 
-import edu.dublbo.generator.dao.RedisUtil;
-import edu.dublbo.generator.utils.SnowflakeIdWorker;
+import edu.dublbo.generator.common.utils.RedisUtil;
+import edu.dublbo.generator.common.utils.SnowflakeIdWorker;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

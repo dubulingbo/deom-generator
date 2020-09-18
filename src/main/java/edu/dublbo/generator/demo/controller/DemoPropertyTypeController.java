@@ -1,15 +1,14 @@
-package edu.dublbo.generator.controller;
+package edu.dublbo.generator.demo.controller;
 
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
 
-import edu.dublbo.generator.service.DemoPropertyTypeService;
+import edu.dublbo.generator.demo.service.DemoPropertyTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;

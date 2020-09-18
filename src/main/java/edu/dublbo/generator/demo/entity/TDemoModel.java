@@ -1,4 +1,4 @@
-package edu.dublbo.generator.entity;
+package edu.dublbo.generator.demo.entity;
 
 
 import edu.dublbo.generator.common.result.BaseResponseData;

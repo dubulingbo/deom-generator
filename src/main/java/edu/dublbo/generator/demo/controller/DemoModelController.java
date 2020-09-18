@@ -1,14 +1,13 @@
-package edu.dublbo.generator.controller;
+package edu.dublbo.generator.demo.controller;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.BaseResponseData;
 import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.result.Result;
-import edu.dublbo.generator.service.DemoModelService;
+import edu.dublbo.generator.demo.service.DemoModelService;
 import edu.dublbo.generator.common.result.ResponseResult;
-import edu.dublbo.generator.entity.TDemoModel;
-import edu.dublbo.generator.utils.Constant;
-import edu.dublbo.generator.utils.WebObjectUtils;
+import edu.dublbo.generator.demo.entity.TDemoModel;
+import edu.dublbo.generator.common.utils.WebObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,10 +1,10 @@
-package edu.dublbo.generator.controller;
+package edu.dublbo.generator.demo.controller;
 
 import edu.dublbo.generator.common.result.BaseResponseData;
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
-import edu.dublbo.generator.entity.TDemoModelDetail;
-import edu.dublbo.generator.service.DemoModelDetailService;
+import edu.dublbo.generator.demo.entity.TDemoModelDetail;
+import edu.dublbo.generator.demo.service.DemoModelDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

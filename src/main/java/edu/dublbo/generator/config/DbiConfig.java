@@ -1,6 +1,6 @@
 package edu.dublbo.generator.config;
 
-import edu.dublbo.generator.utils.SnowflakeIdWorker;
+import edu.dublbo.generator.common.utils.SnowflakeIdWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;

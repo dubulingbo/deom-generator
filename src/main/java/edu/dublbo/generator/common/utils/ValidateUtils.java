@@ -1,4 +1,4 @@
-package edu.dublbo.generator.utils;
+package edu.dublbo.generator.common.utils;
 
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;

@@ -1,11 +1,13 @@
-package edu.dublbo.generator.service;
+package edu.dublbo.generator.demo.service;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
-import edu.dublbo.generator.entity.TDemoModel;
-import edu.dublbo.generator.entity.TDemoModelDetail;
-import edu.dublbo.generator.mapper.TDemoModelDetailMapper;
-import edu.dublbo.generator.mapper.TDemoModelMapper;
+import edu.dublbo.generator.common.utils.SnowflakeIdWorker;
+import edu.dublbo.generator.common.utils.WebObjectUtils;
+import edu.dublbo.generator.demo.entity.TDemoModel;
+import edu.dublbo.generator.demo.entity.TDemoModelDetail;
+import edu.dublbo.generator.demo.mapper.TDemoModelDetailMapper;
+import edu.dublbo.generator.demo.mapper.TDemoModelMapper;
 import edu.dublbo.generator.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

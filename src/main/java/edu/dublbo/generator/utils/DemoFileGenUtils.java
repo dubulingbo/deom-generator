@@ -2,10 +2,8 @@ package edu.dublbo.generator.utils;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
-import edu.dublbo.generator.entity.TDemoModel;
-import edu.dublbo.generator.entity.TDemoModelDetail;
+import edu.dublbo.generator.common.utils.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.Object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
