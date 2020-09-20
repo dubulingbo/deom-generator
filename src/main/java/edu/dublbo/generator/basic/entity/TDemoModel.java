@@ -1,8 +1,6 @@
-package edu.dublbo.generator.demo.entity;
-
+package edu.dublbo.generator.basic.entity;
 
 import edu.dublbo.generator.common.result.BaseResponseData;
-
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;

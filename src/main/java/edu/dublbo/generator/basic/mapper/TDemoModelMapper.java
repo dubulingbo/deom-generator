@@ -1,6 +1,6 @@
-package edu.dublbo.generator.demo.mapper;
+package edu.dublbo.generator.basic.mapper;
 
-import edu.dublbo.generator.demo.entity.TDemoModel;
+import edu.dublbo.generator.basic.entity.TDemoModel;
 
 import java.util.List;
 import java.util.Map;

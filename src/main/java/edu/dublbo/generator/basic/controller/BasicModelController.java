@@ -1,12 +1,12 @@
-package edu.dublbo.generator.demo.controller;
+package edu.dublbo.generator.basic.controller;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.BaseResponseData;
 import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.result.Result;
-import edu.dublbo.generator.demo.service.DemoModelService;
+import edu.dublbo.generator.basic.service.DemoModelService;
 import edu.dublbo.generator.common.result.ResponseResult;
-import edu.dublbo.generator.demo.entity.TDemoModel;
+import edu.dublbo.generator.basic.entity.TDemoModel;
 import edu.dublbo.generator.common.utils.WebObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,9 +26,9 @@ import java.util.Map;
  * i believe i can i do
  */
 @RestController
-@RequestMapping(value = "/demo/model")
-public class DemoModelController {
-    private static final Logger logger = LoggerFactory.getLogger(DemoModelController.class);
+@RequestMapping(value = "/basic/model")
+public class BasicModelController {
+    private static final Logger logger = LoggerFactory.getLogger(BasicModelController.class);
     private DemoModelService service;
 
     @Autowired

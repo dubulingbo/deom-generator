@@ -1,4 +1,4 @@
-package edu.dublbo.generator.demo.entity;
+package edu.dublbo.generator.basic.entity;
 
 import java.util.Date;
 
@@ -9,12 +9,12 @@ import java.util.Date;
  */
 public enum DefaultModelDetail {
     // id，createUser，createTime，modifyUser，modifyTime，deleteFlag
-    DEFAULT_01("id","753323286297194496","主键ID","id","753323286297194502",32,1, 1),
-    DEFAULT_02("createUser","753323286297194496","创建人","create_user","753323286297194502",64,996, 1),
-    DEFAULT_03("createTime","753323286297194498","创建时间","create_time","753323286297194512",null,997, 1),
-    DEFAULT_04("modifyUser","753323286297194496","最后更新人","modify_user","753323286297194502",64,998, 1),
-    DEFAULT_05("modifyTime","753323286297194498","最后更新时间","modify_time","753323286297194512",null,999, 1),
-    DEFAULT_06("deleteFlag","753323286297194497","是否删除（1：是，0：否）","delete_flag","753323286297194507",4,1000, 1);
+    DEFAULT_01("id","756631506453409792","主键ID","id","756631506453409798",32,1, 1),
+    DEFAULT_02("createUser","756631506453409792","创建人","create_user","756631506453409798",64,996, 1),
+    DEFAULT_03("createTime","756631506453409794","创建时间","create_time","756631506453409808",null,997, 1),
+    DEFAULT_04("modifyUser","756631506453409792","最后更新人","modify_user","756631506453409798",64,998, 1),
+    DEFAULT_05("modifyTime","756631506453409794","最后更新时间","modify_time","756631506453409808",null,999, 1),
+    DEFAULT_06("deleteFlag","756631506453409793","是否删除（1：是，0：否）","delete_flag","756631506453409803",4,1000, 1);
     private String id;
     private String modelId;
     private String propertyName;

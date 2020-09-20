@@ -1,4 +1,4 @@
-package edu.dublbo.generator.demo.service;
+package edu.dublbo.generator.basic.service;
 
 import edu.dublbo.generator.common.utils.RedisUtil;
 import edu.dublbo.generator.common.utils.SnowflakeIdWorker;

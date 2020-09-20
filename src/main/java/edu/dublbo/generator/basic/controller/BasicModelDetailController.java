@@ -1,10 +1,10 @@
-package edu.dublbo.generator.demo.controller;
+package edu.dublbo.generator.basic.controller;
 
 import edu.dublbo.generator.common.result.BaseResponseData;
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
-import edu.dublbo.generator.demo.entity.TDemoModelDetail;
-import edu.dublbo.generator.demo.service.DemoModelDetailService;
+import edu.dublbo.generator.basic.entity.TDemoModelDetail;
+import edu.dublbo.generator.basic.service.DemoModelDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ import java.util.*;
  * i believe i can i do
  */
 @RestController
-@RequestMapping(value = "/demo/model/detail")
-public class DemoModelDetailController {
+@RequestMapping(value = "/basic/model/detail")
+public class BasicModelDetailController {
 
     @Autowired
     private DemoModelDetailService service;
@@ -67,9 +67,4 @@ public class DemoModelDetailController {
         return ResponseResult.generateSuccessResult();
     }
 
-    // 生成源码
-    @GetMapping(value = "/demo/generate")
-    public void demoGenerate(String modelId){
-        service.demoGenerate(modelId);
-    }
 }

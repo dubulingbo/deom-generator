@@ -1,22 +1,22 @@
-package edu.dublbo.generator.demo.entity;
+package edu.dublbo.generator.basic.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author DubLBo
- * @since 2020-09-09 11:08
+ * @since 2020-09-09 11:02
  * i believe i can i do
  */
-public class TDemoColumnType implements Serializable {
-    private static final long serialVersionUID = 3645089166543799430L;
+public class TDemoPropertyType implements Serializable {
+    private static final long serialVersionUID = 7399578296671006713L;
 
     // 主键
     private String id;
-    // 类型名称
+    // 名称
     private String name;
-    // 字段类型默认长度
-    private Integer defaultLen;
+    // 全限定名称（带包路径）
+    private String qualifiedName;
     // 序号
     private Integer sortNo;
     // 备注
@@ -32,13 +32,13 @@ public class TDemoColumnType implements Serializable {
     // 是否删除（1：是，0：否）
     private Integer deleteFlag;
 
-    public TDemoColumnType() {
+    public TDemoPropertyType() {
     }
 
-    public TDemoColumnType(String id, String name, Integer defaultLen, Integer sortNo, String remark, String createUser, Date createTime, String modifyUser, Date modifyTime, Integer deleteFlag) {
+    public TDemoPropertyType(String id, String name, String qualifiedName, Integer sortNo, String remark, String createUser, Date createTime, String modifyUser, Date modifyTime, Integer deleteFlag) {
         this.id = id;
         this.name = name;
-        this.defaultLen = defaultLen;
+        this.qualifiedName = qualifiedName;
         this.sortNo = sortNo;
         this.remark = remark;
         this.createUser = createUser;
@@ -64,12 +64,12 @@ public class TDemoColumnType implements Serializable {
         this.name = name;
     }
 
-    public Integer getDefaultLen() {
-        return defaultLen;
+    public String getQualifiedName() {
+        return qualifiedName;
     }
 
-    public void setDefaultLen(Integer defaultLen) {
-        this.defaultLen = defaultLen;
+    public void setQualifiedName(String qualifiedName) {
+        this.qualifiedName = qualifiedName;
     }
 
     public Integer getSortNo() {

@@ -1,4 +1,4 @@
-package edu.dublbo.generator.demo.entity;
+package edu.dublbo.generator.basic.entity;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

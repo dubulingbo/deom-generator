@@ -3,7 +3,7 @@ create table `t_demo_model`(
 	`id` varchar(32) comment '主键' ,
     `name` varchar(64) comment '模型名称（带限定名）',
     `remark` varchar(512) comment '模型说明',
-    `tableName` varchar(64) comment '模型对应的表名称',
+    `table_name` varchar(64) comment '模型对应的表名称',
     `sort_no` bigint comment '排序',
     `model_name` varchar(64) comment '模型名称（不带限定名）',
     `package_dir` varchar(64) comment '父级包路径',

@@ -1,13 +1,13 @@
-package edu.dublbo.generator.demo.service;
+package edu.dublbo.generator.basic.service;
 
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.utils.SnowflakeIdWorker;
 import edu.dublbo.generator.common.utils.WebObjectUtils;
-import edu.dublbo.generator.demo.entity.TDemoModel;
-import edu.dublbo.generator.demo.entity.TDemoModelDetail;
-import edu.dublbo.generator.demo.mapper.TDemoModelDetailMapper;
-import edu.dublbo.generator.demo.mapper.TDemoModelMapper;
+import edu.dublbo.generator.basic.entity.TDemoModel;
+import edu.dublbo.generator.basic.entity.TDemoModelDetail;
+import edu.dublbo.generator.basic.mapper.TDemoModelDetailMapper;
+import edu.dublbo.generator.basic.mapper.TDemoModelMapper;
 import edu.dublbo.generator.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -187,78 +187,5 @@ public class DemoModelDetailService {
         modelDetail.setModifyTime(new Date());
         modelDetail.setDeleteFlag(1);
         mapper.update(modelDetail);
-    }
-
-    @Transactional
-    public List<String> demoGenerate(String modelId) {
-        // 1. 检查模型ID的合理性
-        // 2. 查询模型表，模型明细表
-        // 3. 生成源码文件
-        // 4. 返回结果
-        TDemoModel model = modelMapper.get(modelId);
-        if (model == null) {
-            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型不存在，请刷新重试");
-        }
-        Map<String, Object> con = new HashMap<>();
-        con.put("modelId", model.getId());
-        con.put("_order", "sort_no");
-//        con.put("_sort","ASC");
-        List<TDemoModelDetail> detailList = mapper.select(con);
-        if (detailList == null || detailList.size() == 0) {
-            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型明细列表为空，请刷新重试");
-        }
-
-        // 3. 生成源码
-        // 3.1 生成 Model层
-        // 3.2 生成 Mapper Bean Interface 层
-        // 3.3 生成 Mapper XML 层
-        // 3.4 生成 Service 层
-        // 3.5 生成 Controller 层
-        // 3.6 生成 sql 文件
-
-        // 预处理阶段：定义一些构建的基础数据
-        String modelName = model.getModelName();
-        String packageDir = model.getPackageDir();
-        String packageDir2 = model.getPackageDir2();
-        String modelRemark = model.getRemark();
-        String tableName = model.getTableName();
-        // 属性名列表
-        List<String> proNames = new ArrayList<>();
-        // 属性名对应的属性类型
-        Map<String, String> proTypeMap = new HashMap<>();
-        // 属性名对应的属性注释
-        Map<String, String> proDescMap = new HashMap<>();
-        // 属性名对应的字段名
-        Map<String, String> colNameMap = new HashMap<>();
-        // 需要导入的包
-        Set<String> packageSet = new HashSet<>();
-
-        for (TDemoModelDetail de : detailList) {
-            if (!StringUtils.isEmpty(de.getPropertyName()) && !StringUtils.isEmpty(de.getProType())) {
-                proNames.add(de.getPropertyName());
-                proTypeMap.put(de.getPropertyName(), de.getProType());
-                proDescMap.put(de.getPropertyName(), de.getRemark());
-                colNameMap.put(de.getPropertyName(), de.getColumnName());
-            }
-            if (!StringUtils.isEmpty(de.getQualifiedProType()) && !de.getQualifiedProType().contains("java.lang")) {
-                packageSet.add(de.getQualifiedProType());
-            }
-        }
-
-        if (StringUtils.isEmpty(modelName) || StringUtils.isEmpty(packageDir)
-                || StringUtils.isEmpty(packageDir2)
-                || StringUtils.isEmpty(tableName)
-                || proNames.size() == 0) {
-            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模型的相关数据已丢失");
-        }
-
-//        List<String> res = DemoFileGenUtils.generateModelDemo(modelName, modelRemark, packageDir, proNames, proTypeMap, proDescMap, packageSet);
-
-//        List<String> res = DemoFileGenUtils.generateMapperInterDemo(modelName, modelRemark, packageDir, packageDir2);
-//        List<String> res = DemoFileGenUtils.generateMapperXmlContent(modelName, tableName, packageDir, packageDir2, proNames, colNameMap);
-        List<String> res = DemoFileGenUtils.generateServiceDemo(modelName, modelRemark, packageDir, packageDir2);
-
-        return res;
-
     }
 }

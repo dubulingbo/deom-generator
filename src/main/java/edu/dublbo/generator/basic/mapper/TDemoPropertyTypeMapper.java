@@ -1,7 +1,7 @@
-package edu.dublbo.generator.demo.mapper;
+package edu.dublbo.generator.basic.mapper;
 
-import edu.dublbo.generator.demo.entity.TDemoColumnType;
-import edu.dublbo.generator.demo.entity.TDemoPropertyType;
+import edu.dublbo.generator.basic.entity.TDemoColumnType;
+import edu.dublbo.generator.basic.entity.TDemoPropertyType;
 
 import java.util.List;
 

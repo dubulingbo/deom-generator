@@ -1,9 +1,9 @@
-package edu.dublbo.generator.demo.controller;
+package edu.dublbo.generator.basic.controller;
 
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
 
-import edu.dublbo.generator.demo.service.DemoPropertyTypeService;
+import edu.dublbo.generator.basic.service.DemoPropertyTypeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,9 @@ import java.util.Map;
  * i believe i can i do
  */
 @RestController
-@RequestMapping(value = "/demo/property/type")
-public class DemoPropertyTypeController {
-    private static final Logger logger = LoggerFactory.getLogger(DemoPropertyTypeController.class);
+@RequestMapping(value = "/basic/property/type")
+public class BasicPropertyTypeController {
+    private static final Logger logger = LoggerFactory.getLogger(BasicPropertyTypeController.class);
 
     @Autowired
     private DemoPropertyTypeService service;
