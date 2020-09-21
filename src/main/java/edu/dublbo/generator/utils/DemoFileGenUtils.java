@@ -36,6 +36,12 @@ public class DemoFileGenUtils {
         return new SimpleDateFormat("yyyy年M月d日 H:m:s.S").format(curDate);
     }
 
+    /**
+     * 寻找第一次出现target的位置
+     * @param list 搜索的范围
+     * @param target 搜索的目标
+     * @return 首次出现目标的坐标
+     */
     private static FileCoo findFirstRowIndex(List<String> list, String target) {
         FileCoo coo = new FileCoo();
         if (list != null && list.size() != 0) {
@@ -61,9 +67,9 @@ public class DemoFileGenUtils {
         }
         char first = modelName.charAt(0);
         if (first == 'T' || first == 'V' || first == 'S') {
-            return modelName.substring(1, 2).toUpperCase() + modelName.substring(2);
+            return modelName.substring(1, 2).toUpperCase() + modelName.substring(2) + "Service";
         }
-        return modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
+        return modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + "Service";
     }
 
     // 移除标记所在的行
@@ -72,11 +78,11 @@ public class DemoFileGenUtils {
             return;
         }
         for (String tag : tags) {
-            FileCoo coo;
-            do {
-                coo = findFirstRowIndex(data, tag);
+            FileCoo coo = findFirstRowIndex(data, tag);
+            while (coo.listIndex != -1) {
                 data.remove(coo.listIndex);
-            } while (coo.listIndex != -1);
+                coo = findFirstRowIndex(data, tag);
+            }
         }
     }
 
@@ -86,13 +92,13 @@ public class DemoFileGenUtils {
             return;
         }
         for (String tag : tags) {
-            FileCoo coo;
-            do {
-                coo = findFirstRowIndex(data, tag);
+            FileCoo coo = findFirstRowIndex(data, tag);
+            while (coo.listIndex != -1 && coo.strIndex != -1) {
                 String tmp = data.get(coo.listIndex);
                 tmp = tmp.substring(0, coo.strIndex) + tmp.substring(coo.strIndex + tag.length());
                 data.set(coo.listIndex, tmp);
-            } while (coo.listIndex != -1 && coo.strIndex != -1);
+                coo = findFirstRowIndex(data, tag);
+            }
         }
     }
 
@@ -139,9 +145,8 @@ public class DemoFileGenUtils {
         newVals.add(demoAuthor);
         newVals.add(getCurTimeStr());
         newVals.add(tableName);
-        newVals.add(tableName);
         newVals.add(modelRemark);
-        setNewValTagAt(data, newVals, "#{user}", "#{curTime}", "#{tableName}", "#{tableName}", "#{memo}");
+        setNewValTagAt(data, newVals, "#{user}", "#{curTime}", "#{tableName}", "#{memo}");
 
         removeTags.add("#{newAddColumns}");
         removeAllRowDataTagAt(data, removeTags);
@@ -171,8 +176,8 @@ public class DemoFileGenUtils {
         // mapper interface
         data = readTemplateContent(Constant.MAPPER_INTER_TF_PATH);
         newVals.clear();
-        newVals.add(packageDir2 + ".mapper." + modelName + "Mapper");
-        newVals.add(packageDir + modelName);
+        newVals.add(packageDir2 + ".mapper");
+        newVals.add(packageDir + "." + modelName);
         newVals.add(modelRemark);
         newVals.add(demoAuthor);
         newVals.add(getCurTimeStr());
@@ -185,14 +190,13 @@ public class DemoFileGenUtils {
         // mapper xml
         data = readTemplateContent(Constant.MAPPER_XML_TF_PATH);
         newVals.clear();
-        newVals.add(packageDir2 + ".mapper." + modelName);
+        newVals.add(packageDir2 + ".mapper." + modelName + "Mapper");
         newVals.add(tableName);
         newVals.add(modelName.substring(0, 1).toLowerCase() + modelName.substring(1));
-        newVals.add(packageDir + modelName);
+        newVals.add(packageDir + "." + modelName);
         setNewValTagAt(data, newVals, "{{qualifiedMapperName}}", "{{tableName}}", "{{aliasModelName}}", "{{qualifiedModelName}}");
 
         removeTags.clear();
-        removeTags.add("{{columnNameItems}}");
         removeTags.add("{{resultMapZone}}");
         removeTags.add("{{conditionZone}}");
         removeTags.add("{{aliasConditionZone}}");
@@ -209,7 +213,7 @@ public class DemoFileGenUtils {
         data = readTemplateContent(Constant.SERVICE_TF_PATH);
         newVals.clear();
         String serviceName = getBusiBeanName(modelName);
-        newVals.add(packageDir2 + ".service." + serviceName);
+        newVals.add(packageDir2 + ".service");
         String importZone = "import " + packageDir + "." + modelName + ";\nimport " +
                 packageDir2 + ".mapper." + modelName + "Mapper;";
         newVals.add(importZone);
@@ -477,7 +481,7 @@ public class DemoFileGenUtils {
         singleRowValues.add(demoAuthor);
         singleRowValues.add(getCurTimeStr());
         String tmp = getBusiBeanName(modelName);
-        singleRowValues.add(tmp + "Service");
+        singleRowValues.add(tmp);
         singleRowValues.add(modelName + "Mapper");
 
         logger.info("列表（singleRowValues）的容量为：{}", singleRowValues.size());

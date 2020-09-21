@@ -146,11 +146,8 @@ class DemoGeneratorApplicationTests {
         }
     }
 
-//    @Test
-//    void test02(){
-//        List<String> list = service.loadCode("756865775700422656");
-//        for(String s : list){
-//            System.out.print(s);
-//        }
-//    }
+    @Test
+    void test02(){
+        service.loadCode("756874383129456640");
+    }
 }
