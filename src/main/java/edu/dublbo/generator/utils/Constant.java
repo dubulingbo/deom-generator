@@ -22,5 +22,10 @@ public class Constant {
     public static String MAPPER_INTER_TF_PATH = "./src/main/resources/templates/mapper_inter_template.java";
     public static String MAPPER_XML_TF_PATH = "./src/main/resources/templates/mapper_xml_template2.xml";
     public static String SERVICE_TF_PATH = "./src/main/resources/templates/service_template.java";
-    public static String CONTROLLER_TF_PATH = "./src/main/resources/templates/controller_template.java";
+    public static String CONTROLLER_TF_PATH = "./src/main/resources/templates/controller_template2.java";
+
+    /**
+     * 存放代码文件的路径
+     */
+    public static String DEMO_FILEPATH = "./tmpcode";
 }

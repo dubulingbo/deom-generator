@@ -1,17 +1,24 @@
 package edu.dublbo.generator.code.controller;
 
+import edu.dublbo.generator.code.cto.DemoPackageCTO;
 import edu.dublbo.generator.code.service.CodeFileService;
+import edu.dublbo.generator.common.exception.OptErrorException;
+import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.result.ResponseResult;
 import edu.dublbo.generator.common.result.Result;
+import edu.dublbo.generator.utils.FileOperator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -23,15 +30,15 @@ public class CodeFileController {
     private CodeFileService service;
 
     // 下载源码
-    @GetMapping(value = "/download")
+    @PostMapping(value = "/download")
     @ResponseBody
-    public void downloadCode(String[] modelIds, HttpServletResponse response) {
-        // 1.生成源码文件
+    public void downloadCode(@RequestBody @Validated DemoPackageCTO demoPackage, HttpServletResponse response) {
         // 2.压缩文件
         // 3.设置回复的一些参数
         // 4.将压缩文件写入网络流
-        logger.info("modelIds: {}", Arrays.toString(modelIds));
-        String filename = "./src/main/resources/templates/test/源码233.zip";
+        logger.info("modelIds: {}", demoPackage.getModelId());
+        String filename = service.zipDemoFile(demoPackage);
+//        String filename = "./src/main/resources/templates/test/源码233.zip";
         File file = new File(filename);
         // 如果文件存在，则进行下载
         if (file.exists()) {
@@ -73,6 +80,8 @@ public class CodeFileController {
                         e.printStackTrace();
                     }
                 }
+                // 删除 压缩文件
+                FileOperator.deleteFile(file);
             }
         }
 
@@ -101,4 +110,11 @@ public class CodeFileController {
 //                .contentType(MediaType.parseMediaType("application/octet-stream"))
 //                .body(new FileSystemResource(file));
 //    }
+
+    // 设置定时任务，定时删除临时生成源码文件
+    @Scheduled(cron = "59 0 11 ? * 5 ")
+    public void deleteTmpDemoFile() {
+        logger.info("定时任务执行：{}",new Date());
+        service.deleteTmpDemoFile();
+    }
 }

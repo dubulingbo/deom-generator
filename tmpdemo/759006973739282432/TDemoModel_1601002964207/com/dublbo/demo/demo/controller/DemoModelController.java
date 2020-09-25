@@ -1,4 +1,4 @@
-package #{packageDir};
+package com.dublbo.demo.demo.controller;
 
 import java.util.Date;
 import java.util.UUID;
@@ -6,21 +6,22 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-#{importZone}
+import com.dublbo.demo.demo.model.TDemoModel;
+import com.dublbo.demo.demo.service.DemoModelService;
 
 /**
- * #{remark} 控制类
- * @author #{user}
- * @since #{curTime}
+ * 模型 控制类
+ * @author guan_exe (demo-generator)
+ * @since 2020年9月25日 11:2:42.239
  **/
 @RestController
-@RequestMapping(value = "#{requestPath}")
-public class #{controllerName} {
+@RequestMapping(value = "demo/demo")
+public class DemoModelController {
     @Autowired
-    private #{serviceName} service;
+    private DemoModelService service;
 
     @PostMapping
-    public #{modelName} add(@Validated #{modelName} entity, HttpServletRequest request){
+    public TDemoModel add(@Validated TDemoModel entity, HttpServletRequest request){
         // 主键生成策略，可自定义
         String id = UUID.randomUUID().toString().replace("-","");
         // logger.info("Generate id is : {}", id);
@@ -36,8 +37,8 @@ public class #{controllerName} {
     }
 
     @PutMapping(value = "/{id}")
-    public #{modelName} edit(@PathVariable(value = "id") String id, @RequestBody #{modelName} modifyEntity, HttpServletRequest request) {
-        #{modelName} oldEntity = service.get(id);
+    public TDemoModel edit(@PathVariable(value = "id") String id, @RequestBody TDemoModel modifyEntity, HttpServletRequest request) {
+        TDemoModel oldEntity = service.get(id);
         if (oll != null) {
             // 这里需根据业务需求修改哪些字段，
             // 但是 id,createUser,createTime,modifyUser,modifyTime,deleteFlag 这些字段不允许用户修改
@@ -51,14 +52,14 @@ public class #{controllerName} {
     }
 
     @GetMapping(value = "/{id}")
-    public #{modelName} detail(@PathVariable(value = "id") String id) {
-        #{modelName} entity = service.get(id);
+    public TDemoModel detail(@PathVariable(value = "id") String id) {
+        TDemoModel entity = service.get(id);
         return entity;
     }
 
     @DeleteMapping(value = "/{id}")
-    public #{modelName} delete(@PathVariable(value = "id") String id) {
-        #{modelName} entity = service.get(id);
+    public TDemoModel delete(@PathVariable(value = "id") String id) {
+        TDemoModel entity = service.get(id);
         entity.setModifyUser("admin");
         entity.setModifyTime(new Date());
         entity.setDeleteFlag(1);

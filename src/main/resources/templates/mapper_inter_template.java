@@ -5,7 +5,7 @@ import java.util.List;
 import #{importZone};
 
 /**
- * #{remark}Mapper接口
+ * #{remark} Mapper接口
  * @author #{user}
  * @since #{curTime}
  * i believe i can i do

@@ -1,5 +1,6 @@
 package edu.dublbo.generator.utils;
 
+import edu.dublbo.generator.code.cto.DemoPackageCTO;
 import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
 import edu.dublbo.generator.common.utils.ObjectUtils;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,9 +18,41 @@ import java.util.*;
  * i believe i can i do
  */
 public class DemoFileGenUtils {
-    private static Logger logger = LoggerFactory.getLogger(DemoFileGenUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(DemoFileGenUtils.class);
     private static final String demoAuthor = "guan_exe (demo-generator)";
 
+
+
+    public static String generateModelZipFile(String modelName, String packageDir2, String rootDir, DemoPackageCTO content) {
+        String zipFileName = modelName+ "_" + System.currentTimeMillis();
+        String packagePath = packageToFilePath(packageDir2);
+        String zipRootDir = rootDir + File.separator + zipFileName;
+        String projectPath = zipRootDir + File.separator + packagePath;
+        String serviceName = getBusiBeanName(modelName);
+        logger.info("root dir: {}\nzip root dir: {}\nproject path: {}",rootDir,zipRootDir,projectPath);
+
+        FileOperator.writeContent(content.getTableDemo(), projectPath + File.separator + "model", modelName + "Mysql.sql");
+        FileOperator.writeContent(content.getEntityDemo(), projectPath + File.separator + "model", modelName + ".java");
+        FileOperator.writeContent(content.getMapperInterDemo(), projectPath + File.separator + "mapper", modelName + "Mapper.java");
+        FileOperator.writeContent(content.getMapperXmlDemo(), projectPath + File.separator + "mapper", modelName + "Mapper.xml");
+        FileOperator.writeContent(content.getServiceDemo(), projectPath + File.separator + "service", serviceName + "Service.java");
+        FileOperator.writeContent(content.getControllerDemo(), projectPath + File.separator + "controller", serviceName + "Controller.java");
+
+        String zipFilepath = rootDir + File.separator + zipFileName + ".zip";
+        FileOperator.toZip(new File(zipRootDir),new File(zipFilepath),true);
+        return zipFilepath;
+    }
+
+    private static String packageToFilePath(String packageDir) {
+        if(StringUtils.isEmpty(packageDir)){
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "操作的项目目录不存在");
+        }
+        return packageDir.replace(".",File.separator);
+    }
+
+    /**
+     * 定义内部文件坐标类
+     */
     private static class FileCoo {
         public int listIndex;
         public int strIndex;
@@ -31,6 +63,11 @@ public class DemoFileGenUtils {
         }
     }
 
+    /**
+     * 获取当前系统时间
+     *
+     * @return yyyy年M月d日 H:m:s.S
+     */
     private static String getCurTimeStr() {
         Date curDate = new Date();
         return new SimpleDateFormat("yyyy年M月d日 H:m:s.S").format(curDate);
@@ -38,7 +75,8 @@ public class DemoFileGenUtils {
 
     /**
      * 寻找第一次出现target的位置
-     * @param list 搜索的范围
+     *
+     * @param list   搜索的范围
      * @param target 搜索的目标
      * @return 首次出现目标的坐标
      */
@@ -57,6 +95,12 @@ public class DemoFileGenUtils {
         return coo;
     }
 
+    /**
+     * 根据模型名获得业务类名称（service，controller）
+     *
+     * @param modelName 模型名
+     * @return 模型的业务名
+     */
     private static String getBusiBeanName(String modelName) {
         if (StringUtils.isEmpty(modelName)) {
             logger.error("model Name is EMPTY #233#");
@@ -67,12 +111,17 @@ public class DemoFileGenUtils {
         }
         char first = modelName.charAt(0);
         if (first == 'T' || first == 'V' || first == 'S') {
-            return modelName.substring(1, 2).toUpperCase() + modelName.substring(2) + "Service";
+            return modelName.substring(1, 2).toUpperCase() + modelName.substring(2);
         }
-        return modelName.substring(0, 1).toUpperCase() + modelName.substring(1) + "Service";
+        return modelName.substring(0, 1).toUpperCase() + modelName.substring(1);
     }
 
-    // 移除标记所在的行
+    /**
+     * 移除所有【标记的所在行】
+     *
+     * @param data 操作的数据
+     * @param tags 标记集合
+     */
     private static void removeAllRowDataTagAt(List<String> data, Set<String> tags) {
         if (tags == null || tags.size() == 0) {
             return;
@@ -86,7 +135,12 @@ public class DemoFileGenUtils {
         }
     }
 
-    // 清空标记
+    /**
+     * 清空所有【标记出现的标记】
+     *
+     * @param data 操作的数据
+     * @param tags 标记集合
+     */
     private static void clearAllTagDataTagAt(List<String> data, Set<String> tags) {
         if (tags == null || tags.size() == 0) {
             return;
@@ -102,22 +156,28 @@ public class DemoFileGenUtils {
         }
     }
 
-    // 读取模板文件
+    /**
+     * 读取模板文件 到 列表中
+     *
+     * @param filePath 文件的路径
+     * @return 内容列表
+     */
     private static List<String> readTemplateContent(String filePath) {
         List<String> content;
-        try {
-            content = FileOperator.readContent(new File(filePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模板文件操作错误");
-        }
+        content = FileOperator.readContent(new File(filePath));
         if (content == null || content.size() == 0) {
             throw new OptErrorException(OptStatus.FAIL.getOptCode(), "模板文件内容为空");
         }
         return content;
     }
 
-    // 给指定标签出现的所有地方设置新的值，标签不能重复
+    /**
+     * 给指定标签出现的所有地方设置新的值，标签不能重复
+     *
+     * @param data    操作的目标数据
+     * @param newVals 标签对应的新值集合
+     * @param tags    标签数据
+     */
     private static void setNewValTagAt(List<String> data, List<String> newVals, String... tags) {
         if (tags == null || tags.length == 0) {
             return;
@@ -135,31 +195,33 @@ public class DemoFileGenUtils {
     }
 
 
+    // 生成默认的代码文件
     public static Map<String, Object> generateInherentCode(String modelName, String modelRemark, String tableName, String packageDir, String packageDir2) {
         Map<String, Object> res = new HashMap<>();
         List<String> newVals = new ArrayList<>();
         Set<String> removeTags = new HashSet<>();
-        List<String> data = readTemplateContent(Constant.TABLE_TF_PATH);
+        List<String> data;
 
         // table structure
         newVals.add(demoAuthor);
         newVals.add(getCurTimeStr());
         newVals.add(tableName);
         newVals.add(modelRemark);
+        data = readTemplateContent(Constant.TABLE_TF_PATH);
         setNewValTagAt(data, newVals, "#{user}", "#{curTime}", "#{tableName}", "#{memo}");
-
         removeTags.add("#{newAddColumns}");
         removeAllRowDataTagAt(data, removeTags);
         res.put("tableStructureDemo", String.join("", data));
 
+
         // entity
-        data = readTemplateContent(Constant.ENTITY_TF_PATH);
         newVals.clear();
         newVals.add(packageDir);
         newVals.add(modelRemark);
         newVals.add(demoAuthor);
         newVals.add(getCurTimeStr());
         newVals.add(modelName);
+        data = readTemplateContent(Constant.ENTITY_TF_PATH);
         setNewValTagAt(data, newVals, "#{packageDir}", "#{remark}", "#{user}", "#{curTime}", "#{className}");
 
         removeTags.clear();
@@ -173,8 +235,8 @@ public class DemoFileGenUtils {
         clearAllTagDataTagAt(data, removeTags);
         res.put("entityDemo", String.join("", data));
 
+
         // mapper interface
-        data = readTemplateContent(Constant.MAPPER_INTER_TF_PATH);
         newVals.clear();
         newVals.add(packageDir2 + ".mapper");
         newVals.add(packageDir + "." + modelName);
@@ -183,17 +245,18 @@ public class DemoFileGenUtils {
         newVals.add(getCurTimeStr());
         newVals.add(modelName + "Mapper");
         newVals.add(modelName);
+        data = readTemplateContent(Constant.MAPPER_INTER_TF_PATH);
         setNewValTagAt(data, newVals, "#{packageDir}", "#{importZone}", "#{remark}", "#{user}", "#{curTime}", "#{mapperName}", "#{modelName}");
         res.put("mapperInterfaceDemo", String.join("", data));
 
 
         // mapper xml
-        data = readTemplateContent(Constant.MAPPER_XML_TF_PATH);
         newVals.clear();
         newVals.add(packageDir2 + ".mapper." + modelName + "Mapper");
         newVals.add(tableName);
         newVals.add(modelName.substring(0, 1).toLowerCase() + modelName.substring(1));
         newVals.add(packageDir + "." + modelName);
+        data = readTemplateContent(Constant.MAPPER_XML_TF_PATH);
         setNewValTagAt(data, newVals, "{{qualifiedMapperName}}", "{{tableName}}", "{{aliasModelName}}", "{{qualifiedModelName}}");
 
         removeTags.clear();
@@ -209,40 +272,24 @@ public class DemoFileGenUtils {
         clearAllTagDataTagAt(data, removeTags);
         res.put("mapperXmlDemo", String.join("", data));
 
+
         // service
-        data = readTemplateContent(Constant.SERVICE_TF_PATH);
-        newVals.clear();
-        String serviceName = getBusiBeanName(modelName);
-        newVals.add(packageDir2 + ".service");
-        String importZone = "import " + packageDir + "." + modelName + ";\nimport " +
-                packageDir2 + ".mapper." + modelName + "Mapper;";
-        newVals.add(importZone);
-        newVals.add(modelRemark);
-        newVals.add(demoAuthor);
-        newVals.add(getCurTimeStr());
-        newVals.add(serviceName);
-        newVals.add(modelName + "Mapper");
-        newVals.add(modelName);
-        setNewValTagAt(data, newVals, "#{packageDir}", "#{importZone}",
-                "#{remark}", "#{user}", "#{curTime}", "#{serviceName}", "#{mapperName}", "#{modelName}");
+        data = generateServiceDemo(modelName, modelRemark, packageDir, packageDir2);
         res.put("serviceDemo", String.join("", data));
+
+
+        // controller
+        data = generateControllerDemo(modelName, modelRemark, packageDir, packageDir2);
+        res.put("controllerDemo", String.join("", data));
 
         return res;
     }
 
+
     // 生成 Table structure 的代码
     public static List<String> generateTableDemo(String tableName, String tableDesc, List<String> proNames,
                                                  Map<String, String> colNameMap, Map<String, String> colTypeMap, Map<String, String> proDescMap) {
-        List<String> tFile = readTemplateContent("./src/main/resources/templates/table_template.sql");
-        String[] singleRowTags = {"#{user}", "#{curTime}", "#{tableName}", "#{tableName}", "#{memo}", "#{newAddColumns}"};
-        List<String> singleRowValues = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        FileCoo coo;
-        singleRowValues.add(demoAuthor);
-        singleRowValues.add(getCurTimeStr());
-        singleRowValues.add(tableName);
-        singleRowValues.add(tableName);
-        singleRowValues.add(tableDesc);
         for (int i = 0; i < proNames.size(); i++) {
             String key = proNames.get(i);
             sb.append(colNameMap.get(key)).append(" ")
@@ -253,44 +300,26 @@ public class DemoFileGenUtils {
             }
             sb.append("\n\t");
         }
+        List<String> singleRowValues = new ArrayList<>();
+        singleRowValues.add(demoAuthor);
+        singleRowValues.add(getCurTimeStr());
+        singleRowValues.add(tableName);
         singleRowValues.add(sb.toString());
+        singleRowValues.add(tableDesc);
 
         logger.info("singleRowValues : " + singleRowValues.toString());
-
-        for (int var = 0; var < singleRowTags.length; var++) {
-            sb.setLength(0);
-            String target = singleRowTags[var];
-            coo = findFirstRowIndex(tFile, target);
-            String tmp = tFile.get(coo.listIndex);
-            sb.append(tmp, 0, coo.strIndex).append(singleRowValues.get(var))
-                    .append(tmp.substring(coo.strIndex + target.length()));
-            tFile.set(coo.listIndex, sb.toString());
-        }
-
+        List<String> tFile = readTemplateContent(Constant.TABLE_TF_PATH);
+        setNewValTagAt(tFile, singleRowValues, "#{user}", "#{curTime}", "#{tableName}", "#{newAddColumns}", "#{memo}");
         return tFile;
     }
 
     // 生成 Model 层源码
     public static List<String> generateModelDemo(String modelName, String modelRemark, String packageDir, List<String> proNames,
                                                  Map<String, String> proTypeMap, Map<String, String> proDescMap, Set<String> packageSet) {
-        List<String> tFile = readTemplateContent("./src/main/resources/templates/model_template.java");
-
-
-        String[] singleRowTags = {"#{packageDir}", "#{remark}", "#{user}", "#{curTime}", "#{className}",
-                "#{importZone}", "#{propertyZone}", "#{getAndSetMethod}", "#{toStringZone}"};
-        List<String> singleRowValues = new ArrayList<>();
-        singleRowValues.add(packageDir);
-        singleRowValues.add(modelRemark);
-        singleRowValues.add(demoAuthor);
-        singleRowValues.add(getCurTimeStr());
-        singleRowValues.add(modelName);
-
         StringBuilder var1 = new StringBuilder();
-
         for (String s : packageSet) {
             var1.append("import ").append(s).append(";\n");
         }
-        singleRowValues.add(var1.toString());
 
         StringBuilder var2 = new StringBuilder();
         StringBuilder var3 = new StringBuilder();
@@ -316,81 +345,50 @@ public class DemoFileGenUtils {
                     .append(";\n\t}");
             var4.append("\", ").append(key).append("=\"").append("+").append(key).append("+");
             if (i == iMax) {
-                singleRowValues.add(var2.toString());
-                singleRowValues.add(var3.toString());
-                singleRowValues.add(var4.toString());
                 break;
             }
             var2.append("\n\t");
             var3.append("\n\n\t");
         }
 
+        List<String> singleRowValues = new ArrayList<>();
+        singleRowValues.add(packageDir);
+        singleRowValues.add(var1.toString());
+        singleRowValues.add(modelRemark);
+        singleRowValues.add(demoAuthor);
+        singleRowValues.add(getCurTimeStr());
+        singleRowValues.add(modelName);
+        singleRowValues.add(var2.toString());
+        singleRowValues.add(var3.toString());
+        singleRowValues.add(var4.toString());
+
         logger.info("The singleRowValues size is " + singleRowValues.size());
 
-        for (int var = 0; var < singleRowTags.length; var++) {
-            var1.setLength(0);
-            String target = singleRowTags[var];
-            FileCoo coo = findFirstRowIndex(tFile, target);
-            String tmp = tFile.get(coo.listIndex);
-            var1.append(tmp, 0, coo.strIndex).append(singleRowValues.get(var))
-                    .append(tmp.substring(coo.strIndex + target.length()));
-            tFile.set(coo.listIndex, var1.toString());
-        }
+        List<String> tFile = readTemplateContent(Constant.ENTITY_TF_PATH);
+        setNewValTagAt(tFile, singleRowValues, "#{packageDir}", "#{importZone}", "#{remark}", "#{user}", "#{curTime}", "#{className}", "#{propertyZone}", "#{getAndSetMethod}", "#{toStringZone}");
         return tFile;
     }
 
     // 生成 Mapper Interface 层内容
     public static List<String> generateMapperInterDemo(String modelName, String modelRemark, String packageDir, String packageDir2) {
-        List<String> tFile = readTemplateContent("./src/main/resources/templates/mapper_inter_template.java");
-        FileCoo coo;
-        String tmp;
-        String target;
-        StringBuilder rowBuilder = new StringBuilder();
-        String[] singleRowTags = {"#{packageDir}", "#{importZone}", "#{remark}", "#{user}", "#{curTime}", "#{mapperName}"};
-        List<String> singleRowValues = new ArrayList<>();
-        singleRowValues.add(packageDir2 + ".mapper");
-        singleRowValues.add(packageDir + "." + modelName);
-        singleRowValues.add(modelRemark);
-        singleRowValues.add(demoAuthor);
-        singleRowValues.add(getCurTimeStr());
-        singleRowValues.add(modelName + "Mapper");
+        List<String> newVals = new ArrayList<>();
+        newVals.add(packageDir2 + ".mapper");
+        newVals.add(packageDir + "." + modelName);
+        newVals.add(modelRemark);
+        newVals.add(demoAuthor);
+        newVals.add(getCurTimeStr());
+        newVals.add(modelName + "Mapper");
+        newVals.add(modelName);
 
-        logger.info(singleRowValues.toString());
+        logger.info(newVals.toString());
 
-        for (int i = 0; i < singleRowTags.length; i++) {
-            rowBuilder.setLength(0);
-            target = singleRowTags[i];
-            coo = findFirstRowIndex(tFile, target);
-            tmp = tFile.get(coo.listIndex);
-            rowBuilder.append(tmp, 0, coo.strIndex).append(singleRowValues.get(i))
-                    .append(tmp.substring(coo.strIndex + target.length()));
-            tFile.set(coo.listIndex, rowBuilder.toString());
-        }
-
-        // 替换 #{modelName}
-        target = "#{modelName}";
-        for (int i = 0; i < tFile.size(); i++) {
-            tmp = tFile.get(i);
-            if (tmp.contains(target)) {
-                rowBuilder.setLength(0);
-                int index = tmp.indexOf(target);
-                rowBuilder.append(tmp, 0, index).append(modelName).append(tmp.substring(index + target.length()));
-                tFile.set(i, rowBuilder.toString());
-            }
-        }
-
+        List<String> tFile = readTemplateContent(Constant.MAPPER_INTER_TF_PATH);
+        setNewValTagAt(tFile, newVals, "#{packageDir}", "#{importZone}", "#{remark}", "#{user}", "#{curTime}", "#{mapperName}", "#{modelName}");
         return tFile;
     }
 
     // 生成 Mapper Xml 文件内容
     public static List<String> generateMapperXmlContent(String modelName, String tableName, String packageDir, String packageDir2, List<String> proNames, Map<String, String> colNameMap) {
-        List<String> tFile = readTemplateContent("./src/main/resources/templates/mapper_xml_template2.xml");
-        String[] singleRowTags = {"{{qualifiedMapperName}}", "{{tableName}}", "{{columnNameItems}}",
-                "{{resultMapZone}}", "{{conditionZone}}", "{{aliasConditionZone}}", "{{insertColItems}}", "{{updateColItems}}"};
-        List<String> singleRowValues = new ArrayList<>();
-        singleRowValues.add(packageDir2 + ".mapper." + modelName + "Mapper");
-        singleRowValues.add(tableName);
-
         StringBuilder columnNameItems = new StringBuilder();
         StringBuilder resultMapZone = new StringBuilder();
         StringBuilder conditionZone = new StringBuilder();
@@ -413,12 +411,6 @@ public class DemoFileGenUtils {
             insertColItems.append(tmp).append(",");
             updateColItems.append(colNameMap.get(key)).append(" = ").append(tmp).append(",");
             if (i == proNames.size() - 1) {
-                singleRowValues.add(columnNameItems.toString());
-                singleRowValues.add(resultMapZone.toString());
-                singleRowValues.add(conditionZone.toString());
-                singleRowValues.add(aliasConditionZone.toString());
-                singleRowValues.add(insertColItems.toString());
-                singleRowValues.add(updateColItems.toString());
                 break;
             }
 //            columnNameItems.append(",");
@@ -428,50 +420,30 @@ public class DemoFileGenUtils {
 //            insertColItems.append(",");
             updateColItems.append("\n\t\t\t");
         }
-        logger.info("列表（singleRowValues）的容量为：{}", singleRowValues.size());
-        StringBuilder rower = new StringBuilder();
-        FileCoo coo;
-        for (int i = 0; i < singleRowTags.length; i++) {
-            rower.setLength(0);
-            coo = findFirstRowIndex(tFile, singleRowTags[i]);
-            String tmp = tFile.get(coo.listIndex);
-            rower.append(tmp, 0, coo.strIndex).append(singleRowValues.get(i))
-                    .append(tmp.substring(coo.strIndex + singleRowTags[i].length()));
-            tFile.set(coo.listIndex, rower.toString());
-        }
 
-        // 替换 {{aliasModelName}} 和 {{qualifiedModelName}}
-        String s1 = "{{aliasModelName}}";
-        String target = modelName.substring(0, 1).toLowerCase() + modelName.substring(1);
-        for (int i = 0; i < tFile.size(); i++) {
-            String tmp = tFile.get(i);
-            if (tmp.contains(s1)) {
-                rower.setLength(0);
-                int index = tFile.get(i).indexOf(s1);
-                rower.append(tmp, 0, index).append(target).append(tmp.substring(index + s1.length()));
-                tFile.set(i, rower.toString());
-            }
-        }
-        s1 = "{{qualifiedModelName}}";
-        target = packageDir + "." + modelName;
-        for (int i = 0; i < tFile.size(); i++) {
-            String tmp = tFile.get(i);
-            if (tmp.contains(s1)) {
-                rower.setLength(0);
-                int index = tFile.get(i).indexOf(s1);
-                rower.append(tmp, 0, index).append(target).append(tmp.substring(index + s1.length()));
-                tFile.set(i, rower.toString());
-            }
-        }
+        List<String> newVals = new ArrayList<>();
+        newVals.add(packageDir2 + ".mapper." + modelName + "Mapper");
+        newVals.add(tableName);
+        newVals.add(columnNameItems.toString());
+        newVals.add(modelName.substring(0, 1).toLowerCase() + modelName.substring(1));
+        newVals.add(packageDir + "." + modelName);
+        newVals.add(resultMapZone.toString());
+        newVals.add(conditionZone.toString());
+        newVals.add(aliasConditionZone.toString());
+        newVals.add(insertColItems.toString());
+        newVals.add(updateColItems.toString());
 
+        logger.info("列表（singleRowValues）的容量为：{}", newVals.size());
+
+        List<String> tFile = readTemplateContent(Constant.MAPPER_XML_TF_PATH);
+        String[] singleRowTags = {"{{qualifiedMapperName}}", "{{tableName}}", "{{columnNameItems}}", "{{aliasModelName}}", "{{qualifiedModelName}}",
+                "{{resultMapZone}}", "{{conditionZone}}", "{{aliasConditionZone}}", "{{insertColItems}}", "{{updateColItems}}"};
+        setNewValTagAt(tFile, newVals, singleRowTags);
         return tFile;
     }
 
     // 生成 Service层代码
     public static List<String> generateServiceDemo(String modelName, String modelRemark, String packageDir, String packageDir2) {
-        List<String> tFile = readTemplateContent("./src/main/resources/templates/service_template.java");
-        String[] singleRowTags = {"#{packageDir}", "#{importZone}", "#{remark}", "#{user}",
-                "#{curTime}", "#{serviceName}", "#{mapperName}"};
         List<String> singleRowValues = new ArrayList<>();
         singleRowValues.add(packageDir2 + ".service");
         String importZone = "import " + packageDir + "." + modelName + ";\nimport " +
@@ -481,47 +453,44 @@ public class DemoFileGenUtils {
         singleRowValues.add(demoAuthor);
         singleRowValues.add(getCurTimeStr());
         String tmp = getBusiBeanName(modelName);
-        singleRowValues.add(tmp);
+        singleRowValues.add(tmp + "Service");
         singleRowValues.add(modelName + "Mapper");
+        singleRowValues.add(modelName);
 
         logger.info("列表（singleRowValues）的容量为：{}", singleRowValues.size());
-        StringBuilder rower = new StringBuilder();
-        FileCoo coo;
-        for (int i = 0; i < singleRowTags.length; i++) {
-            rower.setLength(0);
-            coo = findFirstRowIndex(tFile, singleRowTags[i]);
-            tmp = tFile.get(coo.listIndex);
-            rower.append(tmp, 0, coo.strIndex).append(singleRowValues.get(i))
-                    .append(tmp.substring(coo.strIndex + singleRowTags[i].length()));
-            tFile.set(coo.listIndex, rower.toString());
-        }
 
-        // modelName
-        String keyStr = "#{modelName}";
-        for (int i = 0; i < tFile.size(); i++) {
-            tmp = tFile.get(i);
-            if (tmp.contains(keyStr)) {
-                rower.setLength(0);
-                int index = tFile.get(i).indexOf(keyStr);
-                rower.append(tmp, 0, index).append(modelName).append(tmp.substring(index + keyStr.length()));
-                tFile.set(i, rower.toString());
-            }
-        }
+        List<String> tFile = readTemplateContent(Constant.SERVICE_TF_PATH);
+        setNewValTagAt(tFile, singleRowValues, "#{packageDir}", "#{importZone}", "#{remark}", "#{user}", "#{curTime}", "#{serviceName}", "#{mapperName}", "#{modelName}");
         return tFile;
     }
 
-    public static void main(String[] args) {
-        List<String> colNames = new ArrayList<>();
-        colNames.add("id");
-        colNames.add("createUser");
-        colNames.add("modifyUser");
-        colNames.add("deleteFlag");
-        List<String> proNames = new ArrayList<>();
-        proNames.add("id");
-        proNames.add("create_user");
-        proNames.add("modify_user");
-        proNames.add("delete_flag");
-        String tmp = "package #{packageDir};";
-        StringBuilder sb = new StringBuilder("\n\t");
+    // 生成 controller 层代码
+    public static List<String> generateControllerDemo(String modelName, String modelRemark, String packageDir, String packageDir2) {
+        List<String> newVals = new ArrayList<>();
+        String serviceName = getBusiBeanName(modelName);
+        newVals.add(packageDir2 + ".controller");
+        String importZone = "import " + packageDir + "." + modelName + ";\nimport " +
+                packageDir2 + ".service." + serviceName + "Service;";
+        newVals.add(importZone);
+        newVals.add(modelRemark);
+        newVals.add(demoAuthor);
+        newVals.add(getCurTimeStr());
+        String[] paths = packageDir2.split("\\.");
+        String requestPath = "/";
+        if (paths.length > 1) {
+            requestPath += (paths[paths.length - 2] + "/" + paths[paths.length - 1]);
+        } else if (paths.length > 0) {
+            requestPath += paths[paths.length - 1];
+        }
+        newVals.add(requestPath);
+        newVals.add(serviceName + "Controller");
+        newVals.add(serviceName + "Service");
+        newVals.add(modelName);
+
+        List<String> data = readTemplateContent(Constant.CONTROLLER_TF_PATH);
+        setNewValTagAt(data, newVals, "#{packageDir}", "#{importZone}",
+                "#{remark}", "#{user}", "#{curTime}", "#{requestPath}", "#{controllerName}", "#{serviceName}", "#{modelName}");
+        return data;
     }
+
 }

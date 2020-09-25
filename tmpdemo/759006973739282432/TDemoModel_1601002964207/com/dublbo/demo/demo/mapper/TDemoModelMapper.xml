@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dublbo.demo.demo.mapper.TDemoModelMapper">
+    <!-- 定义表名 -->
+    <sql id="tableName">t_demo_model</sql>
+    <!-- 定义全部列名 -->
+    <sql id="columnName">
+        id,name,desc,table_name,sort_no,create_user,create_time,modify_user,modify_time,delete_flag
+    </sql>
+    <!-- 将表中的各字段映射到实体类中的相应属性 -->
+    <resultMap id="tDemoModel" type="com.dublbo.demo.demo.model.TDemoModel">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+		<result column="desc" property="remark"/>
+		<result column="table_name" property="tableName"/>
+		<result column="sort_no" property="sortNo"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="delete_flag" property="deleteFlag"/>
+    </resultMap>
+
+    <!-- 不带表别名的判断条件语句 -->
+    <sql id="condition">
+        <if test="name != null and name != ''">
+			and name = #{name}
+		</if>
+		<if test="remark != null and remark != ''">
+			and desc = #{remark}
+		</if>
+		<if test="tableName != null and tableName != ''">
+			and table_name = #{tableName}
+		</if>
+		<if test="sortNo != null and sortNo != ''">
+			and sort_no = #{sortNo}
+		</if>
+        <if test="createUser != null and createUser != ''">
+            and create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+    <!-- 带表别名 a 的判断条件语句 -->
+    <sql id="aliasCondition">
+        <if test="name != null and name != ''">
+			and a.name = #{name}
+		</if>
+		<if test="remark != null and remark != ''">
+			and a.desc = #{remark}
+		</if>
+		<if test="tableName != null and tableName != ''">
+			and a.table_name = #{tableName}
+		</if>
+		<if test="sortNo != null and sortNo != ''">
+			and a.sort_no = #{sortNo}
+		</if>
+        <if test="createUser != null and createUser != ''">
+            and a.create_user = #{createUser}
+        </if>
+        <if test="createTime != null and createTime != ''">
+            and a.create_time = #{createTime}
+        </if>
+        <if test="modifyUser != null and modifyUser != ''">
+            and a.modify_user = #{modifyUser}
+        </if>
+        <if test="modifyTime != null and modifyTime != ''">
+            and a.modify_time = #{modifyTime}
+        </if>
+        <if test="deleteFlag != null and deleteFlag != ''">
+            and a.delete_flag = #{deleteFlag}
+        </if>
+    </sql>
+
+    <insert id="add" parameterType="com.dublbo.demo.demo.model.TDemoModel">
+        insert into <include refid="tableName"/> (
+            <include refid="columnName"/>
+        )
+        values (
+            #{id},#{name},#{remark},#{tableName},#{sortNo},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{deleteFlag}
+        )
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from <include refid="tableName"/> where id = #{id}
+    </delete>
+    <update id="update" parameterType="com.dublbo.demo.demo.model.TDemoModel">
+        update <include refid="tableName"/>
+        set
+        <trim suffixOverrides=",">
+            name = #{name},
+			desc = #{remark},
+			table_name = #{tableName},
+			sort_no = #{sortNo},
+            create_user = #{createUser},
+            create_time = #{createTime},
+            modify_user = #{modifyUser},
+            modify_time = #{modifyTime},
+            delete_flag = #{deleteFlag},
+        </trim>
+        where id = #{id}
+    </update>
+    <select id="get" parameterType="String" resultMap="tDemoModel">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/>
+        where id = #{id} and delete_flag = 0
+    </select>
+    <select id="listAll" resultMap="tDemoModel">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/>
+        where delete_flag = 0
+    </select>
+    <select id="select" parameterType="Map" resultMap="tDemoModel">
+        select <include refid="columnName"/>
+        from <include refid="tableName"/> a
+        where a.delete_flag = 0 <include refid="aliasCondition"/>
+        <if test="_order != null and _order != ''">
+            order by #{_order}
+            <if test="_sort != null and _sort != ''">
+                #{_sort}
+            </if>
+        </if>
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="Map">
+        select count(1)
+        from <include refid="tableName"/>
+        where delete_flag = 0
+            <include refid="condition"/>
+    </select>
+</mapper>

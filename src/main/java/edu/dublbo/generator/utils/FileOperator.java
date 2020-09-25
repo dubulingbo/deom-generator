@@ -2,6 +2,7 @@ package edu.dublbo.generator.utils;
 
 
 import edu.dublbo.generator.common.exception.BaseException;
+import edu.dublbo.generator.common.exception.OptErrorException;
 import edu.dublbo.generator.common.result.OptStatus;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
@@ -28,19 +29,22 @@ public class FileOperator {
 
     /**
      * 读取文件每一行的内容，存入List中
-     *
      * @param file 文件
      * @return 文件所有内容
-     * @throws IOException 文件读取错误
      */
-    public static List<String> readContent(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+    public static List<String> readContent(File file){
         List<String> content = new ArrayList<>();
-        String rowStr;
-
-        while ((rowStr = reader.readLine()) != null) {
-            rowStr += "\n";
-            content.add(rowStr);
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+            String rowStr;
+            while ((rowStr = reader.readLine()) != null) {
+                rowStr += "\n";
+                content.add(rowStr);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("{} 文件读取错误：{}", file.getAbsolutePath() + separator + file.getName(), e.getMessage());
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "文件读取错误");
         }
         return content;
     }
@@ -52,6 +56,31 @@ public class FileOperator {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8));
         for (String row : content) {
             writer.write(row);
+        }
+    }
+
+    //
+
+    /**
+     *  将字符串写入文件
+     * @param content 待写入的字符串
+     * @param path 文件路径
+     * @param filename 带路径的文件名
+     */
+    public static void writeContent(String content, String path, String filename) {
+        try {
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path + separator + filename)), StandardCharsets.UTF_8));
+            writer.write(content);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info("{} 文件读取错误：{}", filename, e.getMessage());
+            throw new OptErrorException(OptStatus.FAIL.getOptCode(), "文件读取错误");
         }
     }
 
