@@ -3,7 +3,7 @@ target/
 logs/
 src/test/
 .idea/
-tmpdemo/
+tmpdemo
 # !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 # !**/src/test/**/target/
